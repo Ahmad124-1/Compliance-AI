@@ -1,0 +1,86 @@
+import { assessmentApi } from './module.api.js';
+
+export const assessmentService = {
+  dashboard: () => assessmentApi.dashboard(),
+
+  answerTypes: () => assessmentApi.answerTypes(),
+  types: () => assessmentApi.types(),
+  categories: () => assessmentApi.categories(),
+  createCategory: (dto: any) => assessmentApi.createCategory(dto),
+  updateCategory: (id: string, dto: any) => assessmentApi.updateCategory(id, dto),
+  deleteCategory: (id: string) => assessmentApi.deleteCategory(id),
+  tags: () => assessmentApi.tags(),
+
+  listTemplates: (params?: Record<string, unknown>) => assessmentApi.listTemplates(params),
+  createTemplate: (dto: any) => assessmentApi.createTemplate(dto),
+  getTemplate: (id: string) => assessmentApi.getTemplate(id),
+  getStructure: (id: string) => assessmentApi.getStructure(id),
+  updateTemplate: (id: string, dto: any) => assessmentApi.updateTemplate(id, dto),
+  deleteTemplate: (id: string) => assessmentApi.deleteTemplate(id),
+  archiveTemplate: (id: string) => assessmentApi.archiveTemplate(id),
+  restoreTemplate: (id: string) => assessmentApi.restoreTemplate(id),
+  publishTemplate: (id: string, changeSummary?: string) => assessmentApi.publishTemplate(id, changeSummary),
+  unpublishTemplate: (id: string) => assessmentApi.unpublishTemplate(id),
+  duplicateTemplate: (id: string) => assessmentApi.duplicateTemplate(id),
+  cloneTemplate: (id: string, targetOrganizationId: string) => assessmentApi.cloneTemplate(id, targetOrganizationId),
+  createVersion: (id: string, changeSummary?: string) => assessmentApi.createVersion(id, changeSummary),
+  listVersions: (id: string) => assessmentApi.listVersions(id),
+  getVersion: (id: string, version: number) => assessmentApi.getVersion(id, version),
+
+  createSection: (templateId: string, dto: any) => assessmentApi.createSection(templateId, dto),
+  updateSection: (id: string, templateId: string, dto: any) => assessmentApi.updateSection(id, templateId, dto),
+  deleteSection: (id: string, templateId: string) => assessmentApi.deleteSection(id, templateId),
+  reorderSections: (templateId: string, ids: string[]) => assessmentApi.reorderSections(templateId, ids),
+
+  createQuestion: (templateId: string, dto: any) => assessmentApi.createQuestion(templateId, dto),
+  updateQuestion: (id: string, templateId: string, dto: any) => assessmentApi.updateQuestion(id, templateId, dto),
+  deleteQuestion: (id: string, templateId: string) => assessmentApi.deleteQuestion(id, templateId),
+  reorderQuestions: (templateId: string, ids: string[]) => assessmentApi.reorderQuestions(templateId, ids),
+  setQuestionOptions: (id: string, templateId: string, options: unknown[]) => assessmentApi.setQuestionOptions(id, templateId, options),
+
+  createCondition: (templateId: string, dto: any) => assessmentApi.createCondition(templateId, dto),
+  listConditions: (templateId: string) => assessmentApi.listConditions(templateId),
+  createDependency: (templateId: string, dto: any) => assessmentApi.createDependency(templateId, dto),
+  listDependencies: (templateId: string) => assessmentApi.listDependencies(templateId),
+  deleteDependency: (id: string, templateId: string) => assessmentApi.deleteDependency(id, templateId),
+
+  createScoringRule: (templateId: string, dto: any) => assessmentApi.createScoringRule(templateId, dto),
+  listScoringRules: (templateId: string) => assessmentApi.listScoringRules(templateId),
+  createValidationRule: (templateId: string, dto: any) => assessmentApi.createValidationRule(templateId, dto),
+  listValidationRules: (templateId: string) => assessmentApi.listValidationRules(templateId),
+
+  setFrameworkMappings: (templateId: string, qid: string, mappings: any[]) => assessmentApi.setFrameworkMappings(templateId, qid, mappings),
+  listFrameworkMappings: (templateId: string) => assessmentApi.listFrameworkMappings(templateId),
+  setControlMappings: (templateId: string, qid: string, mappings: any[]) => assessmentApi.setControlMappings(templateId, qid, mappings),
+  listControlMappings: (templateId: string) => assessmentApi.listControlMappings(templateId),
+
+  library: (params?: Record<string, unknown>) => assessmentApi.library(params),
+  libraryItem: (id: string) => assessmentApi.libraryItem(id),
+  search: (q: string) => assessmentApi.search(q),
+
+  listAssessments: (params?: Record<string, unknown>) => assessmentApi.listAssessments(params),
+  createAssessment: (dto: any) => assessmentApi.createAssessment(dto),
+  getAssessment: (id: string) => assessmentApi.getAssessment(id),
+  updateAssessment: (id: string, dto: any) => assessmentApi.updateAssessment(id, dto),
+  deleteAssessment: (id: string) => assessmentApi.deleteAssessment(id),
+
+  listResponses: (id: string) => assessmentApi.listResponses(id),
+  submitResponse: (id: string, questionId: string, payload: Record<string, unknown>) => assessmentApi.submitResponse(id, questionId, payload),
+  listScores: (id: string) => assessmentApi.listScores(id),
+  recomputeScores: (id: string) => assessmentApi.recomputeScores(id),
+
+  createAssignment: (id: string, dto: any) => assessmentApi.createAssignment(id, dto),
+  listAssignments: (id: string) => assessmentApi.listAssignments(id),
+  createReview: (id: string, dto: any) => assessmentApi.createReview(id, dto),
+  listReviews: (id: string) => assessmentApi.listReviews(id),
+  createApproval: (id: string, dto: any) => assessmentApi.createApproval(id, dto),
+  listApprovals: (id: string) => assessmentApi.listApprovals(id),
+  createComment: (id: string, dto: any) => assessmentApi.createComment(id, dto),
+  listComments: (id: string) => assessmentApi.listComments(id),
+  resolveComment: (id: string, cid: string) => assessmentApi.resolveComment(id, cid),
+  createAttachment: (id: string, dto: any) => assessmentApi.createAttachment(id, dto),
+  listAttachments: (id: string) => assessmentApi.listAttachments(id),
+
+  createSchedulePlaceholder: (dto: any) => assessmentApi.createSchedulePlaceholder(dto),
+  listSchedulePlaceholders: () => assessmentApi.listSchedulePlaceholders(),
+};
