@@ -12,6 +12,7 @@ import { FileText, Briefcase, QrCode, BarChart3, MessageSquare, Settings2, ListC
 
 const NAV = [
   { href: '/dashboard', label: 'Overview', icon: Network },
+  { href: '/executive', label: 'Executive Dashboard', icon: BarChart3, perm: 'analytics:read' },
   { href: '/search', label: 'Global Search', icon: Search, perm: 'search:read' },
   { href: '/admin/users', label: 'Users', icon: Users, perm: 'user:read' },
   { href: '/admin/organizations', label: 'Organizations', icon: Building2, perm: 'org:read' },
@@ -22,6 +23,7 @@ const NAV = [
   { href: '/admin/cases', label: 'Cases', icon: Briefcase, perm: 'case:read' },
   { href: '/qr-codes', label: 'QR Codes', icon: QrCode, perm: 'qr:read' },
   { href: '/analytics', label: 'Analytics', icon: BarChart3, perm: 'analytics:read' },
+  { href: '/reports', label: 'Reports & Exports', icon: FileText, perm: 'analytics:read' },
   { href: '/worker-communication', label: 'Worker Comms', icon: MessageSquare, perm: 'case:read' },
   { href: '/communication-settings', label: 'Comm Settings', icon: Settings2, perm: 'organization:read' },
   { href: '/queue', label: 'Queue', icon: ListChecks, perm: 'queue:read' },
@@ -29,6 +31,8 @@ const NAV = [
   { href: '/admin/security', label: 'Security Review', icon: ShieldCheck, perm: 'organization:read' },
   { href: '/admin/ai', label: 'AI Foundation', icon: Cpu, perm: 'ai:read' },
   { href: '/assessments', label: 'Assessments', icon: ListChecks, perm: 'assessment:read' },
+  { href: '/audits', label: 'Audits', icon: FileText, perm: 'audit:read' },
+  { href: '/capa', label: 'Findings & CAPA', icon: ShieldAlert, perm: 'capa:read' },
 ];
 
 /**

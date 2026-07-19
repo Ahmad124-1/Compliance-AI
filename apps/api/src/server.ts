@@ -36,6 +36,9 @@ import { auditRoutes } from './routes/audit.routes.js';
 import { aiRoutes } from './routes/ai.routes.js';
 import { securityRoutes } from './routes/security.routes.js';
 import { assessmentRoutes } from './routes/assessment.routes.js';
+import { auditExecutionRoutes } from './routes/audit-execution.routes.js';
+import { registerCAPARoutes } from './routes/capa.routes.js';
+import { reportRoutes } from './routes/report.routes.js';
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -98,6 +101,15 @@ export async function buildServer(): Promise<FastifyInstance> {
 
   // Sprint 4A: Assessment Framework Engine
   await app.register(assessmentRoutes, { prefix: '/api/v1' });
+
+  // Sprint 4B: Audit Execution Workspace
+  await app.register(auditExecutionRoutes, { prefix: '/api/v1' });
+
+  // Sprint 4C: Findings, Non-Conformities, and CAPA
+  await app.register(registerCAPARoutes, { prefix: '/api/v1' });
+
+  // Sprint 4D: Reporting engine and exports
+  await app.register(reportRoutes, { prefix: '/api/v1' });
 
   // Public QR lookup (no auth)
   await app.register(publicQrRoutes, { prefix: '/api/v1' });

@@ -5,6 +5,8 @@ export const SEARCH_ENDPOINTS = {
 } as const;
 
 export const SCOPE_OPTIONS: Array<{ value: string; label: string }> = [
+  { value: 'assessments', label: 'Assessments' },
+  { value: 'assessment_templates', label: 'Assessment Templates' },
   { value: 'all', label: 'Everything' },
   { value: 'complaints', label: 'Complaints' },
   { value: 'cases', label: 'Cases' },
