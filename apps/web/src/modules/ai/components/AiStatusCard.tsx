@@ -5,22 +5,8 @@ import { Cpu, Sparkles } from 'lucide-react';
 import { Card } from '@/components/ui/card.js';
 import { Skeleton } from '@/components/ui/Skeleton.js';
 import { EmptyState } from '@/components/ui/states.js';
-import { AI_PROVIDER_LABELS } from '@/modules/ai/constants.js';
 import { useAiCapabilities } from '@/modules/ai/hooks.js';
-
-const CAPABILITY_LABELS: Record<string, string> = {
-  categorize: 'Complaint Categorization',
-  detectPriority: 'Priority Detection',
-  detectSeverity: 'Severity Detection',
-  analyzeSentiment: 'Sentiment Analysis',
-  scoreRisk: 'Risk Scoring',
-  detectLanguage: 'Language Detection',
-  translate: 'Translation',
-  summarize: 'Complaint Summarization',
-  detectDuplicates: 'Duplicate Detection',
-  mapFrameworks: 'Framework Mapping',
-  recommend: 'Recommendations',
-};
+import { AI_PROVIDER_LABELS } from '@/modules/ai/constants.js';
 
 export function AiStatusCard() {
   const { data, isLoading } = useAiCapabilities();
@@ -34,8 +20,8 @@ export function AiStatusCard() {
     );
   }
 
-  const providerLabel = AI_PROVIDER_LABELS[data?.provider.kind ?? 'null'] ?? data?.provider.displayName ?? 'Disabled';
-  const caps = data?.capabilities;
+  const providerLabel = AI_PROVIDER_LABELS[data?.provider ?? 'null'] ?? data?.provider ?? 'Disabled';
+  const enabled = data?.provider && data.provider !== 'null';
 
   return (
     <Card className="p-4">
@@ -45,24 +31,24 @@ export function AiStatusCard() {
         <span className="ml-auto rounded-full bg-[rgb(var(--panel-2))] px-2 py-0.5 text-xs text-[rgb(var(--muted))]">{providerLabel}</span>
       </div>
       <p className="mt-2 text-xs text-[rgb(var(--muted))]">
-        The AI foundation is wired for future providers (OpenAI, Gemini, Azure, Local). Capabilities below become
-        active when a provider is configured. No model calls are made in this build.
+        {enabled
+          ? `Active model: ${data?.model}. Streaming ${data?.streamingEnabled ? 'enabled' : 'disabled'}. RAG top-K ${data?.rag.topK}.`
+          : 'No AI provider is configured. Enable a provider in AI Settings to activate the compliance copilot, RAG and embeddings.'}
       </p>
       <div className="mt-3 grid grid-cols-2 gap-1.5 sm:grid-cols-3">
-        {caps &&
-          Object.entries(caps).map(([key, enabled]) => (
-            <div
-              key={key}
-              className="flex items-center gap-1.5 rounded-md border border-[rgb(var(--border-color))] px-2 py-1.5 text-xs"
-            >
-              <Sparkles className={`h-3.5 w-3.5 ${enabled ? 'text-emerald-500' : 'text-[rgb(var(--muted-2))]'}`} />
-              <span className={enabled ? 'text-[rgb(var(--text))]' : 'text-[rgb(var(--muted))]'}>
-                {CAPABILITY_LABELS[key] ?? key}
-              </span>
-            </div>
-          ))}
+        {(data?.providers ?? []).map((p) => (
+          <div
+            key={p.kind}
+            className={`flex items-center gap-1.5 rounded-md border border-[rgb(var(--border-color))] px-2 py-1.5 text-xs ${
+              p.kind === data?.provider ? 'bg-[rgb(var(--panel-2))] text-[rgb(var(--text))]' : 'text-[rgb(var(--muted))]'
+            }`}
+          >
+            <Sparkles className={`h-3.5 w-3.5 ${p.chatConfigured ? 'text-emerald-500' : 'text-[rgb(var(--muted-2))]'}`} />
+            <span>{p.label}</span>
+          </div>
+        ))}
       </div>
-      {!caps && <EmptyState title="No provider configured" className="mt-3" />}
+      {!data?.providers?.length && <EmptyState title="No providers registered" className="mt-3" />}
     </Card>
   );
 }

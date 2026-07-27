@@ -12,6 +12,8 @@ import { pool } from './db/pool.js';
 import { migrate } from './db/migrate.js';
 import { rbacService } from './services/rbac.service.js';
 import { seedStandards } from './db/seed-standards.js';
+import { seedKnowledgeBase } from './modules/ai/knowledge/seed.js';
+import { aiJobWorker } from './modules/ai/engine/jobs.queue.js';
 
 import { authRoutes } from './routes/auth.routes.js';
 import { userRoutes } from './routes/user.routes.js';
@@ -34,11 +36,40 @@ import { queueRoutes } from './routes/queue.routes.js';
 import { searchRoutes } from './routes/search.routes.js';
 import { auditRoutes } from './routes/audit.routes.js';
 import { aiRoutes } from './routes/ai.routes.js';
+import { aiFoundationRoutes } from './routes/ai-foundation.routes.js';
 import { securityRoutes } from './routes/security.routes.js';
 import { assessmentRoutes } from './routes/assessment.routes.js';
 import { auditExecutionRoutes } from './routes/audit-execution.routes.js';
 import { registerCAPARoutes } from './routes/capa.routes.js';
 import { reportRoutes } from './routes/report.routes.js';
+import { aiCopilotRoutes } from './routes/ai-copilot.routes.js';
+import { chatRoutes } from './routes/chat.routes.js';
+import { documentAiRoutes } from './routes/document-ai.routes.js';
+import { policyGeneratorRoutes } from './routes/policy-generator.routes.js';
+import { clauseEngineRoutes } from './routes/clause-engine.routes.js';
+import { aiAuditRoutes } from './routes/ai-audit.routes.js';
+import { predictiveRoutes } from './routes/predictive.routes.js';
+import { autonomousRoutes } from './routes/autonomous.routes.js';
+import { workerPlatformRoutes } from './routes/worker-platform.routes.js';
+import { workerVoiceRoutes } from './routes/worker-voice.routes.js';
+import { workerAiRoutes } from './routes/worker-ai.routes.js';
+import { engagementRoutes } from './routes/engagement.routes.js';
+import { broadcastRoutes } from './routes/broadcast.routes.js';
+import { messagingRoutes } from './routes/messaging.routes.js';
+import { emergencyRoutes } from './routes/emergency.routes.js';
+import { calendarRoutes } from './routes/calendar.routes.js';
+import { channelManagerRoutes } from './routes/channel-manager.routes.js';
+import { sustainabilityRoutes } from './routes/sustainability.routes.js';
+import { carbonRoutes } from './routes/carbon.routes.js';
+import { environmentRoutes } from './routes/environment.routes.js';
+import { esgRoutes } from './routes/esg.routes.js';
+import { supplierRoutes } from './routes/suppliers.routes.js';
+import { supplierEsgRoutes } from './routes/supplier-esg.routes.js';
+import { supplierRiskRoutes } from './routes/supplier-risk.routes.js';
+import { supplierAuditRoutes } from './routes/supplier-audits.routes.js';
+import { supplierScorecardRoutes } from './routes/supplier-scorecards.routes.js';
+import { responsibleSourcingRoutes } from './routes/responsible-sourcing.routes.js';
+import { certificationRoutes } from './routes/certifications.routes.js';
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -87,7 +118,10 @@ export async function buildServer(): Promise<FastifyInstance> {
   await app.register(workerCommunicationRoutes, { prefix: '/api/v1' });
   await app.register(queueRoutes, { prefix: '/api/v1' });
 
-  // Sprint3D: AI Foundation (provider interfaces, no LLM calls)
+  // Sprint5A: AI Foundation & Compliance Knowledge Engine
+  await app.register(aiFoundationRoutes, { prefix: '/api/v1' });
+
+  // Legacy AI insight routes (complaint analysis / translation) — retained for compatibility.
   await app.register(aiRoutes, { prefix: '/api/v1' });
 
   // Sprint3D: Global Search + Saved/Recent searches
@@ -111,6 +145,62 @@ export async function buildServer(): Promise<FastifyInstance> {
   // Sprint 4D: Reporting engine and exports
   await app.register(reportRoutes, { prefix: '/api/v1' });
 
+  // Sprint 5C: AI Compliance Copilot
+  await app.register(aiCopilotRoutes, { prefix: '/api/v1' });
+  await app.register(chatRoutes, { prefix: '/api/v1' });
+  await app.register(documentAiRoutes, { prefix: '/api/v1' });
+  await app.register(policyGeneratorRoutes, { prefix: '/api/v1' });
+  await app.register(clauseEngineRoutes, { prefix: '/api/v1' });
+
+  // Sprint 5B: AI Audit Assistant
+  await app.register(aiAuditRoutes, { prefix: '/api/v1' });
+
+  // Sprint 5D: Predictive Intelligence Engine
+  await app.register(predictiveRoutes, { prefix: '/api/v1' });
+
+  // Sprint 5E: Autonomous Compliance Engine
+  await app.register(autonomousRoutes, { prefix: '/api/v1' });
+
+  // Sprint 6A: Worker Experience Platform
+  await app.register(workerPlatformRoutes, { prefix: '/api/v1' });
+
+  // Sprint 6B: Worker Voice & Ethics Platform
+  await app.register(workerVoiceRoutes, { prefix: '/api/v1' });
+
+  // Sprint 6C: AI Worker Assistant
+  await app.register(workerAiRoutes, { prefix: '/api/v1' });
+
+  // Sprint 6D: Worker Engagement & Wellbeing
+  await app.register(engagementRoutes, { prefix: '/api/v1' });
+
+  // Sprint 6E: Enterprise Communication & Collaboration Hub
+  await app.register(broadcastRoutes, { prefix: '/api/v1' });
+  await app.register(messagingRoutes, { prefix: '/api/v1' });
+  await app.register(emergencyRoutes, { prefix: '/api/v1' });
+  await app.register(calendarRoutes, { prefix: '/api/v1' });
+  await app.register(channelManagerRoutes, { prefix: '/api/v1' });
+
+  // Sprint 7A: Sustainability Management Platform
+  await app.register(sustainabilityRoutes, { prefix: '/api/v1' });
+
+  // Sprint 7B: Carbon & GHG Accounting Platform
+  await app.register(carbonRoutes, { prefix: '/api/v1' });
+
+  // Sprint 7C: Environmental Management System
+  await app.register(environmentRoutes, { prefix: '/api/v1' });
+
+  // Sprint 8A: Enterprise ESG Reporting & Disclosure
+  await app.register(esgRoutes, { prefix: '/api/v1' });
+
+  // Sprint 7E: Enterprise Supply Chain & Supplier ESG Platform
+  await app.register(supplierRoutes, { prefix: '/api/v1' });
+  await app.register(supplierEsgRoutes, { prefix: '/api/v1' });
+  await app.register(supplierRiskRoutes, { prefix: '/api/v1' });
+  await app.register(supplierAuditRoutes, { prefix: '/api/v1' });
+  await app.register(supplierScorecardRoutes, { prefix: '/api/v1' });
+  await app.register(responsibleSourcingRoutes, { prefix: '/api/v1' });
+  await app.register(certificationRoutes, { prefix: '/api/v1' });
+
   // Public QR lookup (no auth)
   await app.register(publicQrRoutes, { prefix: '/api/v1' });
 
@@ -123,6 +213,8 @@ async function start(): Promise<void> {
     await migrate();
     await rbacService.ensureSeeded();
     await seedStandards();
+    await seedKnowledgeBase();
+    aiJobWorker.start();
     await app.listen({ port: env.PORT, host: env.HOST });
     console.log(`[api] listening on ${env.HOST}:${env.PORT}`);
   } catch (err) {

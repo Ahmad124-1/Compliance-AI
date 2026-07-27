@@ -2,7 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 
 import { authenticate, getAuth, requirePermission } from './guard.js';
-import { reportsService } from '../modules/reports/service.js';
+import { reportsService, type ReportFormat } from '../modules/reports/service.js';
 
 const templateSchema = z.object({
   name: z.string().min(1),
@@ -32,10 +32,14 @@ export async function reportRoutes(app: FastifyInstance): Promise<void> {
     return reportsService.generate({ organizationId: auth.org, userId: auth.sub, type: body.type as any, format: body.format as any, title: body.title, filters: body.filters, includeCharts: body.includeCharts });
   });
 
-  app.get('/reports/:id/download', { preHandler: requirePermission('analytics:read') }, async (req) => {
+  app.get('/reports/:id/download', { preHandler: requirePermission('analytics:read') }, async (req, reply) => {
     const auth = getAuth(req);
     const { id } = req.params as { id: string };
     const q = req.query as { format?: string };
-    return reportsService.getExportPayload(auth.org, id, (q.format as any) ?? 'pdf');
+    const format = (q.format as ReportFormat) ?? 'pdf';
+    const payload = await reportsService.getExportPayload(auth.org, id, format);
+    reply.header('Content-Type', payload.contentType ?? 'text/plain');
+    reply.header('Content-Disposition', `attachment; filename="${payload.title.replace(/[^a-z0-9_-]/gi, '_')}.${format === 'excel' ? 'tsv' : format === 'print' || format === 'pdf' ? 'html' : format}"`);
+    return payload.content;
   });
 }

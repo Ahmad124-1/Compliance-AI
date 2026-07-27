@@ -22,6 +22,16 @@ export const env = {
   SMTP_FROM: process.env.SMTP_FROM ?? 'no-reply@complianceos.ai',
   ENABLE_REGISTRATION: (process.env.ENABLE_REGISTRATION ?? 'true') === 'true',
   LOG_LEVEL: process.env.LOG_LEVEL ?? 'info',
+
+  // AI providers
+  OPENAI_API_KEY: process.env.OPENAI_API_KEY ?? '',
+  ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY ?? '',
+  GEMINI_API_KEY: process.env.GEMINI_API_KEY ?? '',
+  AZURE_OPENAI_ENDPOINT: process.env.AZURE_OPENAI_ENDPOINT ?? '',
+  AZURE_OPENAI_KEY: process.env.AZURE_OPENAI_KEY ?? '',
+  AZURE_OPENAI_DEPLOYMENT: process.env.AZURE_OPENAI_DEPLOYMENT ?? 'complianceos-ai',
+  AZURE_OPENAI_API_VERSION: process.env.AZURE_OPENAI_API_VERSION ?? '2024-06-01',
+  OLLAMA_BASE_URL: process.env.OLLAMA_BASE_URL ?? 'http://localhost:11434',
 } as const;
 
 export type Env = typeof env;

@@ -22,7 +22,7 @@ export async function auditExecutionRoutes(app: FastifyInstance): Promise<void> 
   });
 
   app.get('/audits/:id', { preHandler: read }, async (req) => {
-    const auth = getAuth(req);
+    const _auth = getAuth(req);
     const { id } = req.params as { id: string };
     return auditExecutionService.getAudit(id);
   });
@@ -126,7 +126,7 @@ export async function auditExecutionRoutes(app: FastifyInstance): Promise<void> 
 
   app.post('/audits/:id/progress/refresh', { preHandler: update }, async (req) => {
     const { id } = req.params as { id: string };
-    const auth = getAuth(req);
+    const _auth = getAuth(req);
     return auditExecutionService.refreshProgress(id);
   });
 }

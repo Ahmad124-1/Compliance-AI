@@ -1,0 +1,28 @@
+import { workerPlatformApi } from './api.js';
+
+export const workerPlatformService = {
+  getProfile: () => workerPlatformApi.getProfile(),
+  updateProfile: (data: Record<string, unknown>) => workerPlatformApi.updateProfile(data),
+  searchDirectory: (params?: Record<string, string | undefined>) => workerPlatformApi.searchDirectory(params ?? {}),
+  listAnnouncements: (params?: Record<string, string | undefined>) => workerPlatformApi.listAnnouncements(params),
+  getAnnouncement: (id: string) => workerPlatformApi.getAnnouncement(id),
+  createAnnouncement: (data: Record<string, unknown>) => workerPlatformApi.createAnnouncement(data),
+  updateAnnouncement: (id: string, data: Record<string, unknown>) => workerPlatformApi.updateAnnouncement(id, data),
+  markAnnouncementRead: (id: string) => workerPlatformApi.markAnnouncementRead(id),
+  acknowledgeAnnouncement: (id: string) => workerPlatformApi.acknowledgeAnnouncement(id),
+  listTasks: () => workerPlatformApi.listTasks(),
+  getTask: (id: string) => workerPlatformApi.getTask(id),
+  createTask: (data: Record<string, unknown>) => workerPlatformApi.createTask(data),
+  completeTask: (id: string) => workerPlatformApi.completeTask(id),
+  listDocuments: () => workerPlatformApi.listDocuments(),
+  getDocument: (id: string) => workerPlatformApi.getDocument(id),
+  createDocument: (data: Record<string, unknown>) => workerPlatformApi.createDocument(data),
+  downloadDocument: (id: string) => workerPlatformApi.downloadDocument(id),
+  listForms: () => workerPlatformApi.listForms(),
+  getForm: (id: string) => workerPlatformApi.getForm(id),
+  submitForm: (data: Record<string, unknown>) => workerPlatformApi.submitForm(data),
+  listLearning: () => workerPlatformApi.listLearning(),
+  getLearning: (id: string) => workerPlatformApi.getLearning(id),
+  enrollLearning: (data: Record<string, unknown>) => workerPlatformApi.enrollLearning(data),
+  updateLearningProgress: (id: string, data: Record<string, unknown>) => workerPlatformApi.updateLearningProgress(id, data),
+};

@@ -1,61 +1,63 @@
 'use client';
 
-import { Cpu } from 'lucide-react';
+import { useState } from 'react';
+import { Settings2, BookOpen, Bot, BarChart3, ListChecks } from 'lucide-react';
 
-import { Card } from '@/components/ui/card.js';
 import { AiStatusCard } from '@/modules/ai/components/AiStatusCard.js';
+import { AiConfigPanel } from '@/modules/ai/components/AiConfigPanel.js';
+import { KnowledgeBasePanel } from '@/modules/ai/components/KnowledgeBasePanel.js';
+import { AiUsagePanel } from '@/modules/ai/components/AiUsagePanel.js';
+import { AiJobsPanel } from '@/modules/ai/components/AiJobsPanel.js';
+import { AiChatPanel } from '@/modules/ai/components/AiChatPanel.js';
 
-const ADAPTERS = [
-  { key: 'openai', label: 'OpenAI', note: 'Chat completions API (gpt-4o-mini).' },
-  { key: 'gemini', label: 'Google Gemini', note: 'Generative Language API (gemini-1.5-flash).' },
-  { key: 'azure', label: 'Azure AI', note: 'Azure OpenAI Service deployments.' },
-  { key: 'local', label: 'Local Model', note: 'Self-hosted OpenAI-compatible endpoint.' },
-];
+const TABS = [
+  { key: 'settings', label: 'Settings', icon: Settings2 },
+  { key: 'knowledge', label: 'Knowledge Base', icon: BookOpen },
+  { key: 'chat', label: 'Assistant', icon: Bot },
+  { key: 'usage', label: 'Usage & Cost', icon: BarChart3 },
+  { key: 'jobs', label: 'Jobs', icon: ListChecks },
+] as const;
 
 export default function AiFoundationPage() {
+  const [tab, setTab] = useState<(typeof TABS)[number]['key']>('settings');
+
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-lg font-semibold">AI Foundation</h1>
+        <h1 className="text-lg font-semibold">AI Foundation & Compliance Knowledge Engine</h1>
         <p className="text-xs text-[rgb(var(--muted))]">
-          Provider-agnostic architecture: interfaces, factories, dependency injection and future adapter contracts.
-          No model inference runs in this build.
+          Multi-provider AI service layer with automatic fallback, prompt templates, a compliance knowledge base,
+          semantic vector search, RAG, memory, cost tracking and a background job queue.
         </p>
       </div>
 
       <AiStatusCard />
 
-      <Card className="p-4">
-        <div className="mb-3 flex items-center gap-2">
-          <Cpu className="h-5 w-5 text-[rgb(var(--primary))]" />
-          <h2 className="text-sm font-semibold">Supported Providers</h2>
-        </div>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {ADAPTERS.map((a) => (
-            <div key={a.key} className="rounded-lg border border-[rgb(var(--border-color))] p-3">
-              <p className="text-sm font-medium text-[rgb(var(--text))]">{a.label}</p>
-              <p className="mt-1 text-xs text-[rgb(var(--muted))]">{a.note}</p>
-            </div>
-          ))}
-        </div>
-      </Card>
+      <div className="flex flex-wrap gap-1 border-b border-[rgb(var(--border-color))]">
+        {TABS.map((t) => {
+          const Icon = t.icon;
+          return (
+            <button
+              key={t.key}
+              onClick={() => setTab(t.key)}
+              className={`flex items-center gap-1.5 border-b-2 px-3 py-2 text-sm ${
+                tab === t.key
+                  ? 'border-[rgb(var(--primary))] font-medium text-[rgb(var(--text))]'
+                  : 'border-transparent text-[rgb(var(--muted))] hover:text-[rgb(var(--text))]'
+              }`}
+            >
+              <Icon className="h-4 w-4" />
+              {t.label}
+            </button>
+          );
+        })}
+      </div>
 
-      <Card className="p-4">
-        <h2 className="mb-3 text-sm font-semibold">Capability Surface</h2>
-        <ul className="grid grid-cols-1 gap-1.5 text-xs text-[rgb(var(--muted))] sm:grid-cols-2">
-          <li>• Complaint Categorization</li>
-          <li>• Priority Detection</li>
-          <li>• Severity Detection</li>
-          <li>• Sentiment Analysis</li>
-          <li>• Risk Scoring</li>
-          <li>• Language Detection</li>
-          <li>• Translation</li>
-          <li>• Complaint Summarization</li>
-          <li>• Duplicate Complaint Detection</li>
-          <li>• Framework Mapping</li>
-          <li>• Recommendation Engine</li>
-        </ul>
-      </Card>
+      {tab === 'settings' && <AiConfigPanel />}
+      {tab === 'knowledge' && <KnowledgeBasePanel />}
+      {tab === 'chat' && <AiChatPanel />}
+      {tab === 'usage' && <AiUsagePanel />}
+      {tab === 'jobs' && <AiJobsPanel />}
     </div>
   );
 }

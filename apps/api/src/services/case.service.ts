@@ -326,9 +326,10 @@ export const caseService = {
 
   async getCaseStats(orgId, filters: any = {}) {
     const { where, params } = buildCaseWhere(filters);
-    const statusSql = `SELECT status, COUNT(*) AS count FROM cases c ${where} AND c.is_deleted = FALSE GROUP BY status`;
-    const prioritySql = `SELECT priority, COUNT(*) AS count FROM cases c ${where} AND c.is_deleted = FALSE GROUP BY priority`;
-    const totalSql = `SELECT COUNT(*) AS total FROM cases c ${where} AND c.is_deleted = FALSE`;
+    const whereClause = where ? `${where} AND c.is_deleted = FALSE` : 'WHERE c.is_deleted = FALSE';
+    const statusSql = `SELECT status, COUNT(*) AS count FROM cases c ${whereClause} GROUP BY status`;
+    const prioritySql = `SELECT priority, COUNT(*) AS count FROM cases c ${whereClause} GROUP BY priority`;
+    const totalSql = `SELECT COUNT(*) AS total FROM cases c ${whereClause}`;
     const [statusResult, priorityResult, totalResult] = await Promise.all([
       query(statusSql, params),
       query(prioritySql, params),

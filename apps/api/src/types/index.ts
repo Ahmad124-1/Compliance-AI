@@ -396,6 +396,8 @@ export interface AnalyticsSlaDailySummary {
 
 export type QueueJobStatus = 'pending' | 'queued' | 'processing' | 'completed' | 'failed' | 'cancelled' | 'dead_letter';
 
+export type { SustainabilityProgram, EsgGoal, SustainabilityKpi, KpiMeasurement, SustainabilityInitiative, InitiativeMilestone, SdgMapping, SustainabilityEvidence, SustainabilityApproval, SustainabilityReport, SustainabilityDashboard } from './sustainability.js';
+
 export interface QueueJob {
   id: string;
   organizationId: string | null;

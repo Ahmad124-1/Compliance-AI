@@ -156,30 +156,24 @@ function buildCaseWhere(filters, startParam = 1) {
   const conditions: string[] = [];
   const params: any[] = [];
   let i = startParam;
-
-  const add = (cond, val) => {
-    conditions.push(cond);
-    params.push(val);
-  };
-
-  if (filters.status) { add(`c.status = $${i++}`, filters.status); }
-  if (filters.priority) { add(`c.priority = $${i++}`, filters.priority); }
-  if (filters.category) { add(`c.category = $${i++}`, filters.category); }
-  if (filters.source) { add(`c.source = $${i++}`, filters.source); }
-  if (filters.factoryId) { add(`c.factory_id = $${i++}`, filters.factoryId); }
-  if (filters.departmentId) { add(`c.department_id = $${i++}`, filters.departmentId); }
-  if (filters.assignedTo && filters.assignedTo.length) { add(`c.assigned_to && $${i++}`, filters.assignedTo); }
+  conditions.push(`c.is_deleted = FALSE`);
+  if (filters.status) { conditions.push(`c.status = $${i++}`); params.push(filters.status); }
+  if (filters.priority) { conditions.push(`c.priority = $${i++}`); params.push(filters.priority); }
+  if (filters.category) { conditions.push(`c.category = $${i++}`); params.push(filters.category); }
+  if (filters.source) { conditions.push(`c.source = $${i++}`); params.push(filters.source); }
+  if (filters.factoryId) { conditions.push(`c.factory_id = $${i++}`); params.push(filters.factoryId); }
+  if (filters.departmentId) { conditions.push(`c.department_id = $${i++}`); params.push(filters.departmentId); }
+  if (filters.assignedTo && filters.assignedTo.length) { conditions.push(`c.assigned_to && $${i++}`); params.push(filters.assignedTo); }
   if (filters.search) {
     const term = `%${filters.search}%`;
-    add(`(c.title ILIKE $${i++} OR c.description ILIKE $${i++} OR c.case_number ILIKE $${i++} OR c.reporter_name ILIKE $${i++})`, term);
-    params.push(term, term, term);
+    conditions.push(`(c.title ILIKE $${i++} OR c.description ILIKE $${i++} OR c.case_number ILIKE $${i++} OR c.reporter_name ILIKE $${i++})`);
+    params.push(term, term, term, term);
   }
-  if (filters.dateFrom) { add(`c.created_at >= $${i++}`, filters.dateFrom); }
-  if (filters.dateTo) { add(`c.created_at <= $${i++}`, filters.dateTo); }
-  if (filters.labels && filters.labels.length) { add(`c.labels && $${i++}`, filters.labels); }
-  if (filters.tags && filters.tags.length) { add(`c.tags && $${i++}`, filters.tags); }
-
-  const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+  if (filters.dateFrom) { conditions.push(`c.created_at >= $${i++}`); params.push(filters.dateFrom); }
+  if (filters.dateTo) { conditions.push(`c.created_at <= $${i++}`); params.push(filters.dateTo); }
+  if (filters.labels && filters.labels.length) { conditions.push(`c.labels && $${i++}`); params.push(filters.labels); }
+  if (filters.tags && filters.tags.length) { conditions.push(`c.tags && $${i++}`); params.push(filters.tags); }
+  const where = `WHERE ${conditions.join(' AND ')}`;
   return { where, params, nextParam: i };
 }
 

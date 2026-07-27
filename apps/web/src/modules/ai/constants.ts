@@ -1,16 +1,61 @@
 export const AI_ENDPOINTS = {
   capabilities: '/api/v1/ai/capabilities',
-  analyze: '/api/v1/ai/analyze',
-  translate: '/api/v1/ai/translate',
+  providers: '/api/v1/ai/providers',
+  config: '/api/v1/ai/config',
+  updateConfig: '/api/v1/ai/config',
+  prompts: '/api/v1/ai/prompts',
+  createPrompt: '/api/v1/ai/prompts',
+  renderPrompt: '/api/v1/ai/prompts/render',
+  knowledgeStandards: '/api/v1/ai/knowledge/standards',
+  ingest: '/api/v1/ai/knowledge/ingest',
+  vectorSearch: '/api/v1/ai/vector/search',
+  indexKb: '/api/v1/ai/vector/index/kb',
+  indexKbJob: '/api/v1/ai/jobs/index-kb',
+  rag: '/api/v1/ai/rag',
+  ragContext: '/api/v1/ai/rag/context',
+  chat: '/api/v1/ai/chat',
+  chatStream: '/api/v1/ai/chat/stream',
+  memoryScope: (scope: string) => `/api/v1/ai/memory/${scope}`,
+  memory: '/api/v1/ai/memory',
+  jobs: '/api/v1/ai/jobs',
+  jobStats: '/api/v1/ai/jobs/stats',
+  usage: '/api/v1/ai/usage',
 } as const;
 
 export const AI_PROVIDER_LABELS: Record<string, string> = {
   openai: 'OpenAI',
+  anthropic: 'Anthropic (Claude)',
   gemini: 'Google Gemini',
-  azure: 'Azure AI',
-  local: 'Local Model',
+  azure: 'Azure OpenAI',
+  ollama: 'Ollama (Local)',
   null: 'Disabled',
 };
+
+export const AI_EMBEDDING_LABELS: Record<string, string> = {
+  openai: 'OpenAI',
+  azure: 'Azure OpenAI',
+  ollama: 'Ollama (Local)',
+  null: 'Disabled',
+};
+
+export const KNOWLEDGE_DOMAINS: Array<{ code: string; label: string }> = [
+  { code: 'policy', label: 'Policy' },
+  { code: 'audit', label: 'Audit' },
+  { code: 'capa', label: 'CAPA' },
+  { code: 'grievance', label: 'Worker Grievance' },
+  { code: 'evidence', label: 'Evidence' },
+  { code: 'supplier', label: 'Supplier' },
+];
+
+export const KNOWLEDGE_CATEGORIES: Array<{ code: string; label: string }> = [
+  { code: 'social', label: 'Social' },
+  { code: 'quality', label: 'Quality' },
+  { code: 'environment', label: 'Environment' },
+  { code: 'energy', label: 'Energy' },
+  { code: 'esg', label: 'ESG' },
+  { code: 'legal', label: 'Legal' },
+  { code: 'custom', label: 'Custom' },
+];
 
 export const SUPPORTED_LANGUAGES: Array<{ code: string; label: string }> = [
   { code: 'en', label: 'English' },

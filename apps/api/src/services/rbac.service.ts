@@ -57,7 +57,11 @@ export interface PermissionCatalogueItem {
  * Full platform permission catalogue.
  */
 export function buildPermissionCatalogue(): PermissionCatalogueItem[] {
-  const resources = ['org', 'site', 'department', 'team', 'user', 'role', 'permission', 'profile', 'standard', 'framework', 'grievance', 'case', 'investigation', 'evidence', 'witness', 'interview', 'finding', 'root_cause', 'resolution', 'escalation', 'risk', 'ai', 'audit', 'search', 'notification', 'sla', 'queue', 'qr', 'template', 'communication', 'analytics', 'assessment'];
+const resources = ['org', 'site', 'department', 'team', 'user', 'role', 
+'permission', 'profile', 'standard', 'framework', 'grievance', 'case', 'investigation', 'evidence', 'witness', 
+'interview', 'finding', 'root_cause', 'resolution', 'escalation', 'risk', 'ai', 'audit', 'search', 'notification', 
+'sla', 'queue', 'qr', 'template', 'communication', 'analytics', 'assessment', 'engagement', 'survey', 'recognition', 
+'wellbeing', 'community', 'event', 'sustainability', 'environment'];
   const actions = ['read', 'create', 'update', 'delete', 'assign'];
   const items: PermissionCatalogueItem[] = [];
   for (const resource of resources) {

@@ -1,0 +1,70 @@
+import { sustainabilityApi } from './api.js';
+
+export const sustainabilityService = {
+  listPrograms: (params?: Record<string, unknown>) => sustainabilityApi.programs.list(params),
+  getProgram: (id: string) => sustainabilityApi.programs.get(id),
+  createProgram: (input: Record<string, unknown>) => sustainabilityApi.programs.create(input),
+  updateProgram: (id: string, input: Record<string, unknown>) => sustainabilityApi.programs.update(id, input),
+  deleteProgram: (id: string) => sustainabilityApi.programs.delete(id),
+
+  listGoals: (params?: Record<string, unknown>) => sustainabilityApi.goals.list(params),
+  getGoal: (id: string) => sustainabilityApi.goals.get(id),
+  createGoal: (input: Record<string, unknown>) => sustainabilityApi.goals.create(input),
+  updateGoal: (id: string, input: Record<string, unknown>) => sustainabilityApi.goals.update(id, input),
+  deleteGoal: (id: string) => sustainabilityApi.goals.delete(id),
+  getGoalProgress: () => sustainabilityApi.goals.progress(),
+
+  listKpis: (params?: Record<string, unknown>) => sustainabilityApi.kpis.list(params),
+  getKpi: (id: string) => sustainabilityApi.kpis.get(id),
+  createKpi: (input: Record<string, unknown>) => sustainabilityApi.kpis.create(input),
+  updateKpi: (id: string, input: Record<string, unknown>) => sustainabilityApi.kpis.update(id, input),
+  deleteKpi: (id: string) => sustainabilityApi.kpis.delete(id),
+  recordMeasurement: (kpiId: string, input: Record<string, unknown>) => sustainabilityApi.kpis.recordMeasurement(kpiId, input),
+  getKpiMeasurements: (kpiId: string, params?: Record<string, unknown>) => sustainabilityApi.kpis.getMeasurements(kpiId, params),
+  getKpiTrend: (kpiId: string, params?: Record<string, unknown>) => sustainabilityApi.kpis.getTrend(kpiId, params),
+  getKpiAggregated: (kpiId: string, params?: Record<string, unknown>) => sustainabilityApi.kpis.getAggregated(kpiId, params),
+
+  listInitiatives: (params?: Record<string, unknown>) => sustainabilityApi.initiatives.list(params),
+  getInitiative: (id: string) => sustainabilityApi.initiatives.get(id),
+  createInitiative: (input: Record<string, unknown>) => sustainabilityApi.initiatives.create(input),
+  updateInitiative: (id: string, input: Record<string, unknown>) => sustainabilityApi.initiatives.update(id, input),
+  deleteInitiative: (id: string) => sustainabilityApi.initiatives.delete(id),
+
+  createMilestone: (input: Record<string, unknown>) => sustainabilityApi.milestones.create(input),
+  listMilestonesByInitiative: (initiativeId: string) => sustainabilityApi.milestones.listByInitiative(initiativeId),
+  updateMilestone: (id: string, input: Record<string, unknown>) => sustainabilityApi.milestones.update(id, input),
+  deleteMilestone: (id: string) => sustainabilityApi.milestones.delete(id),
+
+  listSdgs: (params?: Record<string, unknown>) => sustainabilityApi.sdgs.list(params),
+  getSdgConstants: () => sustainabilityApi.sdgs.constants(),
+  getSdgContribution: () => sustainabilityApi.sdgs.contribution(),
+  createSdgMapping: (input: Record<string, unknown>) => sustainabilityApi.sdgs.create(input),
+  deleteSdgMapping: (id: string) => sustainabilityApi.sdgs.delete(id),
+
+  listEvidence: (params?: Record<string, unknown>) => sustainabilityApi.evidence.list(params),
+  listEvidenceByEntity: (entityType: string, entityId: string) => sustainabilityApi.evidence.listByEntity(entityType, entityId),
+  createEvidence: (input: Record<string, unknown>) => sustainabilityApi.evidence.create(input),
+  updateEvidence: (id: string, input: Record<string, unknown>) => sustainabilityApi.evidence.update(id, input),
+  deleteEvidence: (id: string) => sustainabilityApi.evidence.delete(id),
+
+  listApprovals: (params?: Record<string, unknown>) => sustainabilityApi.approvals.list(params),
+  listApprovalsByEntity: (entityType: string, entityId: string) => sustainabilityApi.approvals.listByEntity(entityType, entityId),
+  createApproval: (input: Record<string, unknown>) => sustainabilityApi.approvals.create(input),
+  transitionApproval: (id: string, input: Record<string, unknown>) => sustainabilityApi.approvals.transition(id, input),
+  deleteApproval: (id: string) => sustainabilityApi.approvals.delete(id),
+
+  listReports: (params?: Record<string, unknown>) => sustainabilityApi.reports.list(params),
+  getReport: (id: string) => sustainabilityApi.reports.get(id),
+  createReport: (input: Record<string, unknown>) => sustainabilityApi.reports.create(input),
+  updateReport: (id: string, input: Record<string, unknown>) => sustainabilityApi.reports.update(id, input),
+  deleteReport: (id: string) => sustainabilityApi.reports.delete(id),
+
+  getDashboard: () => sustainabilityApi.analytics.dashboard(),
+  getProgramProgress: (programId: string) => sustainabilityApi.analytics.programProgress(programId),
+  getGoalCompletion: () => sustainabilityApi.analytics.goalCompletion(),
+  getKpiTrends: (kpiId: string, params?: Record<string, unknown>) => sustainabilityApi.analytics.kpiTrends(kpiId, params),
+  getInitiativePerformance: () => sustainabilityApi.analytics.initiativePerformance(),
+  getDepartmentComparison: () => sustainabilityApi.analytics.departmentComparison(),
+  getEsgPillarDistribution: () => sustainabilityApi.analytics.esgPillarDistribution(),
+  getSdgContributionAnalytics: () => sustainabilityApi.analytics.sdgContribution(),
+};

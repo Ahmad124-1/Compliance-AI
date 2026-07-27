@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 
 import { NotFoundError, BadRequestError } from '../../../core/errors.js';
 import { audit } from '../../../core/audit.js';
-import { query, withTransaction } from '../../../db/pool.js';
+import { query } from '../../../db/pool.js';
 import type { AssessmentTemplate, AssessmentSection, AssessmentQuestion } from '../../assessments/types.js';
 import type {
   AuditRecord,
@@ -16,9 +16,7 @@ import type {
   AuditCalendarRecord,
   AuditReminderRecord,
   AuditProgressRecord,
-  AuditStatusHistoryRecord,
   AuditType,
-  AuditStatus,
   ObservationSeverity,
   FindingType,
   FindingPriority,
@@ -86,7 +84,7 @@ export function buildAuditSectionsFromTemplate(input: AuditTemplateStructure): A
     updatedAt: new Date().toISOString(),
   }));
 
-  const questionResponses = input.questions.map((question, index) => ({
+  const questionResponses = input.questions.map((question, _index) => ({
     id: randomUUID(),
     auditId: '',
     auditSectionId: sections.find((s) => s.sourceSectionId === question.sectionId)?.id ?? null,

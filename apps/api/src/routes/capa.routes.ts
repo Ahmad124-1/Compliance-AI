@@ -8,7 +8,6 @@ export async function registerCAPARoutes(app: FastifyInstance) {
 
   const read = requirePermission('capa:read');
   const create = requirePermission('capa:create');
-  const update = requirePermission('capa:update');
 
   app.get('/capa/findings', { preHandler: read }, async (req) => {
     const auth = getAuth(req);

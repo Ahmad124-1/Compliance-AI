@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 
 import { audit } from '../../../core/audit.js';
-import { NotFoundError, BadRequestError } from '../../../core/errors.js';
+import { NotFoundError } from '../../../core/errors.js';
 import { query } from '../../../db/pool.js';
 import type { CAPAApprovalRecord, CAPARecord, CAPATaskRecord, FindingRecord, NonConformityRecord, RootCauseRecord, RiskAssessmentRecord, VerificationChecklistRecord } from '../types.js';
 

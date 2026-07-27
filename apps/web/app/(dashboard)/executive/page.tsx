@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import { BarChart3, TrendingUp, ShieldCheck } from 'lucide-react';
+import { TrendingUp, ShieldCheck } from 'lucide-react';
 
 import { Card } from '@/components/ui/card.js';
 import { useAnalyticsUiStore, useKpis, useTrends, useHeatmap } from '@/modules/analytics/store.js';
