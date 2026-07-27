@@ -3,6 +3,8 @@
 import { useEffect, type ReactNode } from 'react';
 
 import { cn } from '@/lib/cn';
+import { Button } from './button.js';
+import { X } from 'lucide-react';
 
 interface DrawerProps {
   open: boolean;
@@ -29,22 +31,17 @@ export function Drawer({ open, onClose, title, children, width = 'max-w-md' }: D
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
       <div
         className={cn(
-          'absolute right-0 top-0 flex h-full w-full flex-col border-l border-[rgb(var(--border-color))] bg-[rgb(var(--card))] p-5 shadow-[var(--shadow-lg)]',
+          'absolute right-0 top-0 flex h-full w-full flex-col border-l border-[rgb(var(--border-color))] bg-[rgb(var(--card))] shadow-[var(--shadow-lg)]',
           width,
         )}
       >
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-4 flex items-center justify-between px-5 pt-5">
           {title && <h2 className="text-lg font-semibold text-[rgb(var(--text))]">{title}</h2>}
-          <button
-            type="button"
-            aria-label="Close panel"
-            className="ml-auto text-[rgb(var(--muted))] hover:text-[rgb(var(--text))]"
-            onClick={onClose}
-          >
-            ✕
-          </button>
+          <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close panel">
+            <X className="h-4 w-4" />
+          </Button>
         </div>
-        <div className="flex-1 overflow-auto">{children}</div>
+        <div className="flex-1 overflow-auto px-5 pb-5">{children}</div>
       </div>
     </div>
   );

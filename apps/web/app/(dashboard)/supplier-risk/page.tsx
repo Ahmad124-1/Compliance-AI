@@ -60,7 +60,7 @@ export default function SupplierRiskPage() {
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <StatTile label="Total Risks" value={risks?.length ?? 0} />
           <StatTile label="Open Risks" value={risks?.filter((r) => r.status === 'open').length ?? 0} />
-          <StatTile label="High Risks" value={heatmap?.highRisks?.length ?? 0} />
+          <StatTile label="High Risks" value={heatmap?.count ?? 0} />
           <StatTile label="Avg Risk Score" value={risks?.length ? Math.round(risks.reduce((s, r) => s + r.riskScore, 0) / risks.length) : 0} />
         </div>
       )}

@@ -39,17 +39,17 @@ export function Dialog({ open, onClose, title, description, children, footer, si
       aria-modal="true"
       aria-label={title}
     >
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
       <div
         className={cn(
-          'relative z-10 w-full rounded-lg border border-[rgb(var(--border-color))] bg-[rgb(var(--card))] p-5 shadow-[var(--shadow-lg)]',
+          'relative z-10 w-full rounded-xl border border-[rgb(var(--border-color))] bg-[rgb(var(--card))] p-6 shadow-[var(--shadow-lg)]',
           SIZE[size],
         )}
       >
         {title && <h2 className="text-lg font-semibold text-[rgb(var(--text))]">{title}</h2>}
         {description && <p className="mt-1 text-sm text-[rgb(var(--muted))]">{description}</p>}
         <div className="mt-4">{children}</div>
-        {footer && <div className="mt-5 flex justify-end gap-2">{footer}</div>}
+        {footer && <div className="mt-6 flex justify-end gap-2">{footer}</div>}
       </div>
     </div>
   );

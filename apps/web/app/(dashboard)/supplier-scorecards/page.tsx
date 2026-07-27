@@ -8,6 +8,7 @@ import { Skeleton } from '@/components/ui';
 import { EmptyState } from '@/components/ui';
 import { BarChart, LineChart, StatTile } from '@/components/ui';
 import { useAuth } from '@/providers/AuthProvider.js';
+import { useQuery } from '@tanstack/react-query';
 import { supplierScorecardService } from '@/modules/supplier-scorecards/service.js';
 import { supplierService } from '@/modules/suppliers/service.js';
 

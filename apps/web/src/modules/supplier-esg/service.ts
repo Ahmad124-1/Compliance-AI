@@ -1,4 +1,5 @@
 import { supplierEsgApi } from './api.js';
+import type { AssessmentAnswer } from './types.js';
 
 export const supplierEsgService = {
   listAssessments: (params?: Record<string, unknown>) => supplierEsgApi.assessments.list(params),

@@ -4,8 +4,7 @@ import { useMemo } from 'react';
 import { Building2, ShieldCheck, TrendingUp, AlertTriangle, MapPin, Package, Star, Clock } from 'lucide-react';
 
 import { Card } from '@/components/ui/card.js';
-import { Skeleton } from '@/components/ui';
-import { EmptyState } from '@/components/ui';
+import { Skeleton, ErrorState, EmptyState } from '@/components/ui';
 import { BarChart, DonutChart, StatTile } from '@/components/ui';
 import { useAuth } from '@/providers/AuthProvider.js';
 import { createHttpClient } from '@/lib/api/client.js';
@@ -58,7 +57,7 @@ export default function SuppliersPage() {
   const loading = sLoading || statsLoading || esgLoading || riskLoading || scLoading || certLoading;
   const isError = sError;
 
-  if (isError) return <EmptyState title="Failed to load supplier data" message="Could not reach the supplier API." onRetry={() => refetchSuppliers()} />;
+  if (isError) return <ErrorState title="Failed to load supplier data" message="Could not reach the supplier API." onRetry={() => refetchSuppliers()} />;
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
@@ -90,7 +89,7 @@ export default function SuppliersPage() {
             <div className="space-y-2">
               {scorecards.slice(0, 5).map((s, i) => (
                 <div key={s.id} className="flex items-center justify-between rounded-md border border-[rgb(var(--border-color))] px-3 py-2 text-sm">
-                  <span className="font-medium">#{i + 1} {s.supplierName ?? 'Unknown'}</span>
+                  <span className="font-medium">#{i + 1} Supplier {s.supplierId.slice(0, 8)}</span>
                   <span className="font-semibold">{s.overallEsgScore}%</span>
                 </div>
               ))}
@@ -101,12 +100,12 @@ export default function SuppliersPage() {
         </Card>
         <Card className="p-4">
           <h2 className="mb-3 text-sm font-semibold">Risk Overview</h2>
-          {loading ? <Skeleton className="h-48" /> : riskHeatmap?.highRisks?.length ? (
+          {loading ? <Skeleton className="h-48" /> : (riskHeatmap?.count ?? 0) > 0 ? (
             <div className="space-y-2">
-              {riskHeatmap.highRisks.slice(0, 5).map((r) => (
-                <div key={r.id} className="flex items-center justify-between rounded-md border border-[rgb(var(--border-color))] px-3 py-2 text-sm">
-                  <span className="font-medium">{r.title}</span>
-                  <span className="font-semibold text-red-500">{r.riskScore}</span>
+              {riskHeatmap!.riskTypes.slice(0, 5).map((r, i) => (
+                <div key={i} className="flex items-center justify-between rounded-md border border-[rgb(var(--border-color))] px-3 py-2 text-sm">
+                  <span className="font-medium">{r}</span>
+                  <span className="font-semibold text-red-500">High</span>
                 </div>
               ))}
             </div>
@@ -142,9 +141,9 @@ export default function SuppliersPage() {
           </h2>
           {loading ? <Skeleton className="h-48" /> : esgSummary?.length ? (
             <div className="space-y-2">
-              {esgSummary.filter(Boolean).map((summary) => (
-                <div key={summary.id} className="flex items-center justify-between rounded-md border border-[rgb(var(--border-color))] px-3 py-2 text-sm">
-                  <span className="font-medium">{summary.supplierName}</span>
+              {esgSummary.filter(Boolean).map((summary, i) => (
+                <div key={i} className="flex items-center justify-between rounded-md border border-[rgb(var(--border-color))] px-3 py-2 text-sm">
+                  <span className="font-medium">Category {i + 1}</span>
                   <span className="font-semibold">{summary.avgOverallScore}%</span>
                 </div>
               ))}

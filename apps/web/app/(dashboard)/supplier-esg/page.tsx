@@ -4,8 +4,7 @@ import { useMemo } from 'react';
 import { ClipboardCheck, TrendingUp, AlertCircle, CheckCircle, Clock, Award } from 'lucide-react';
 
 import { Card } from '@/components/ui/card.js';
-import { Skeleton } from '@/components/ui';
-import { EmptyState } from '@/components/ui';
+import { Skeleton, ErrorState, EmptyState } from '@/components/ui';
 import { BarChart, DonutChart, StatTile } from '@/components/ui';
 import { useAuth } from '@/providers/AuthProvider.js';
 import { createHttpClient } from '@/lib/api/client.js';
@@ -39,7 +38,7 @@ export default function SupplierEsgPage() {
     const map = new Map<string, { sum: number; count: number }>();
     for (const a of assessments ?? []) {
       const cur = map.get(a.category) ?? { sum: 0, count: 0 };
-      cur.sum += a.overallScore;
+      cur.sum += a.scoring.overallScore;
       cur.count += 1;
       map.set(a.category, cur);
     }
@@ -49,14 +48,14 @@ export default function SupplierEsgPage() {
   const statusDistribution = useMemo(() => {
     const counts: Record<string, number> = {};
     for (const a of assessments ?? []) {
-      counts[a.status] = (counts[a.status] ?? 0) + 1;
+      counts[a.approvalStatus] = (counts[a.approvalStatus] ?? 0) + 1;
     }
     return Object.entries(counts).map(([label, value]) => ({ label, value }));
   }, [assessments]);
 
   const loading = aLoading || scLoading || riskLoading;
 
-  if (aError) return <EmptyState title="Failed to load ESG data" message="Could not reach the supplier ESG API." onRetry={() => refetchA()} />;
+  if (aError) return <ErrorState title="Failed to load ESG data" message="Could not reach the supplier ESG API." onRetry={() => refetchA()} />;
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
@@ -75,9 +74,9 @@ export default function SupplierEsgPage() {
       ) : (
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <StatTile label="Total Assessments" value={assessments?.length ?? 0} />
-          <StatTile label="Avg Score" value={`${assessments?.length ? Math.round(assessments.reduce((s, a) => s + a.overallScore, 0) / assessments.length) : 0}%`} />
+          <StatTile label="Avg Score" value={`${assessments?.length ? Math.round(assessments.reduce((s, a) => s + a.scoring.overallScore, 0) / assessments.length) : 0}%`} />
           <StatTile label="Approved" value={assessments?.filter((a) => a.approvalStatus === 'approved').length ?? 0} />
-          <StatTile label="High Risks" value={riskHeatmap?.highRisks?.length ?? 0} />
+          <StatTile label="High Risks" value={riskHeatmap?.count ?? 0} />
         </div>
       )}
 
@@ -104,9 +103,9 @@ export default function SupplierEsgPage() {
               <div key={a.id} className="flex items-center justify-between rounded-md border border-[rgb(var(--border-color))] px-3 py-2 text-sm">
                 <div>
                   <p className="font-medium">{a.title}</p>
-                  <p className="text-xs text-[rgb(var(--muted))]">{a.category} · {a.supplierName ?? 'Unknown'}</p>
+                  <p className="text-xs text-[rgb(var(--muted))]">{a.category} · Supplier {a.supplierId.slice(0, 8)}</p>
                 </div>
-                <span className="font-semibold">{a.overallScore}%</span>
+                  <span className="font-semibold">{a.scoring.overallScore}%</span>
               </div>
             ))}
           </div>

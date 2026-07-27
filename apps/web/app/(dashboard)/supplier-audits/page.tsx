@@ -85,7 +85,7 @@ export default function SupplierAuditsPage() {
                   <p className="font-medium">{a.title}</p>
                   <p className="text-xs text-[rgb(var(--muted))]">{a.auditType} · {a.status}</p>
                 </div>
-                <span className="font-semibold">{a.findingCount} findings</span>
+                <span className="font-semibold">{a.findings.length} findings</span>
               </div>
             ))}
           </div>
