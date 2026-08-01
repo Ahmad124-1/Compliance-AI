@@ -47,6 +47,7 @@ export const supplierEsgService = {
       scoring: { overallScore: 0, environmentalScore: 0, socialScore: 0, governanceScore: 0, healthSafetyScore: 0, categoryScores: {}, maxPossibleScore: 0, percentage: 0 },
       reviewerId: null,
       reviewerName: null,
+      status: 'draft',
       approvalStatus: 'pending',
       approvedById: null,
       approvedByName: null,

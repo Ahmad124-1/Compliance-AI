@@ -3,6 +3,7 @@ import { Geist } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/providers/Providers';
 import { CommandPalette } from '@/components/ui/CommandPalette.js';
+import { FloatingAiAssistant } from '@/components/ai/FloatingAiAssistant.js';
 
 const geist = Geist({
   subsets: ['latin'],
@@ -12,7 +13,7 @@ const geist = Geist({
 
 export const metadata: Metadata = {
   title: 'ComplianceOS AI',
-  description: 'Enterprise compliance management platform',
+  description: 'AI-powered Sustainability, ESG, Carbon & Compliance Platform',
 };
 
 export default function RootLayout({
@@ -26,6 +27,7 @@ export default function RootLayout({
         <Providers>
           {children}
           <CommandPalette />
+          <FloatingAiAssistant />
         </Providers>
       </body>
     </html>

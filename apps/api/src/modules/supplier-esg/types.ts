@@ -43,6 +43,7 @@ export interface SupplierAssessmentRecord {
   scoring: AssessmentScoring;
   reviewerId: string | null;
   reviewerName: string | null;
+  status: SupplierAssessmentStatus | null;
   approvalStatus: SupplierApprovalStatus;
   approvedById: string | null;
   approvedByName: string | null;

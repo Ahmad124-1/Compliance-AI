@@ -1,14 +1,33 @@
 export const ENVIRONMENT_ENDPOINTS = {
   dashboard: '/api/v1/environment/dashboard',
   water: '/api/v1/environment/water',
+  waterTargets: '/api/v1/water/targets',
+  waterKpis: '/api/v1/water/kpis',
   waste: '/api/v1/environment/waste',
+  wasteVendors: '/api/v1/waste/vendors',
+  wasteTargets: '/api/v1/waste/targets',
+  wasteKpis: '/api/v1/waste/kpis',
   air: '/api/v1/environment/air',
+  airLimits: '/api/v1/air/limits',
+  airKpis: '/api/v1/air/kpis',
   chemicals: '/api/v1/environment/chemicals',
+  chemicalContainers: '/api/v1/chemicals/containers',
+  chemicalSpills: '/api/v1/chemicals/spills',
   incidents: '/api/v1/environment/incidents',
   risks: '/api/v1/environment/risks',
   permits: '/api/v1/environment/permits',
+  permitsRenewals: '/api/v1/environmental-permits/renewals',
+  permitsExpired: '/api/v1/environmental-permits/expired',
   resources: '/api/v1/environment/resources',
   projects: '/api/v1/environment/projects',
+  biodiversity: '/api/v1/biodiversity',
+  biodiversityKpis: '/api/v1/biodiversity/kpis',
+  objectives: '/api/v1/environmental-objectives',
+  objectivesMilestones: '/api/v1/environmental-objectives/milestones',
+  reports: '/api/v1/environmental-reports',
+  reportsGenerate: '/api/v1/environmental-reports/generate',
+  aiInsights: '/api/v1/environment/ai/insights',
+  aiExecutiveSummary: '/api/v1/environment/ai/executive-summary',
 } as const;
 
 export const WATER_SOURCE_TYPES = [
@@ -20,17 +39,45 @@ export const WATER_SOURCE_TYPES = [
   { value: 'other', label: 'Other' },
 ] as const;
 
+export const WATER_TARGET_TYPES = [
+  { value: 'reduction', label: 'Reduction' },
+  { value: 'intensity', label: 'Intensity' },
+  { value: 'reuse', label: 'Reuse' },
+  { value: 'recycling', label: 'Recycling' },
+  { value: 'discharge_quality', label: 'Discharge Quality' },
+  { value: 'other', label: 'Other' },
+] as const;
+
 export const WASTE_TYPES = [
   { value: 'general', label: 'General Waste' },
   { value: 'hazardous', label: 'Hazardous Waste' },
-  { value: 'electronic', label: 'Electronic Waste' },
   { value: 'plastic', label: 'Plastic Waste' },
   { value: 'paper', label: 'Paper Waste' },
-  { value: 'organic', label: 'Organic Waste' },
   { value: 'metal', label: 'Metal Waste' },
-  { value: 'chemical', label: 'Chemical Waste' },
-  { value: 'medical', label: 'Medical Waste' },
+  { value: 'food', label: 'Food Waste' },
+  { value: 'electronic', label: 'Electronic Waste' },
   { value: 'construction', label: 'Construction Waste' },
+  { value: 'medical', label: 'Medical Waste' },
+  { value: 'chemical', label: 'Chemical Waste' },
+  { value: 'organic', label: 'Organic Waste' },
+  { value: 'other', label: 'Other' },
+] as const;
+
+export const WASTE_VENDOR_TYPES = [
+  { value: 'recycler', label: 'Recycler' },
+  { value: 'disposal', label: 'Disposal' },
+  { value: 'treatment', label: 'Treatment' },
+  { value: 'collection', label: 'Collection' },
+  { value: 'transport', label: 'Transport' },
+  { value: 'other', label: 'Other' },
+] as const;
+
+export const WASTE_TARGET_TYPES = [
+  { value: 'reduction', label: 'Reduction' },
+  { value: 'recycling', label: 'Recycling' },
+  { value: 'diversion', label: 'Diversion' },
+  { value: 'intensity', label: 'Intensity' },
+  { value: 'cost_reduction', label: 'Cost Reduction' },
   { value: 'other', label: 'Other' },
 ] as const;
 
@@ -160,6 +207,7 @@ export const PERMIT_TYPES = [
   { value: 'water', label: 'Water Permit' },
   { value: 'air', label: 'Air Permit' },
   { value: 'waste', label: 'Waste License' },
+  { value: 'hazardous_waste', label: 'Hazardous Waste License' },
   { value: 'chemical', label: 'Chemical License' },
   { value: 'environmental_approval', label: 'Environmental Approval' },
   { value: 'discharge', label: 'Discharge Permit' },
@@ -206,4 +254,124 @@ export const PROJECT_STATUSES = [
   { value: 'completed', label: 'Completed' },
   { value: 'cancelled', label: 'Cancelled' },
   { value: 'on_hold', label: 'On Hold' },
+] as const;
+
+export const BIODIVERSITY_RECORD_TYPES = [
+  { value: 'protected_area', label: 'Protected Area' },
+  { value: 'land_usage', label: 'Land Usage' },
+  { value: 'tree_plantation', label: 'Tree Plantation' },
+  { value: 'tree_loss', label: 'Tree Loss' },
+  { value: 'habitat_restoration', label: 'Habitat Restoration' },
+  { value: 'species_monitoring', label: 'Species Monitoring' },
+  { value: 'community_project', label: 'Community Project' },
+  { value: 'green_area', label: 'Green Area' },
+  { value: 'other', label: 'Other' },
+] as const;
+
+export const BIODIVERSITY_STATUSES = [
+  { value: 'active', label: 'Active' },
+  { value: 'completed', label: 'Completed' },
+  { value: 'cancelled', label: 'Cancelled' },
+  { value: 'planned', label: 'Planned' },
+] as const;
+
+export const RESTORATION_STATUSES = [
+  { value: 'planning', label: 'Planning' },
+  { value: 'in_progress', label: 'In Progress' },
+  { value: 'completed', label: 'Completed' },
+  { value: 'monitoring', label: 'Monitoring' },
+  { value: 'cancelled', label: 'Cancelled' },
+] as const;
+
+export const CONTAINER_TYPES = [
+  { value: 'drum', label: 'Drum' },
+  { value: 'tote', label: 'Tote' },
+  { value: 'cylinder', label: 'Cylinder' },
+  { value: 'tank', label: 'Tank' },
+  { value: 'bottle', label: 'Bottle' },
+  { value: 'bag', label: 'Bag' },
+  { value: 'other', label: 'Other' },
+] as const;
+
+export const CONTAINER_STATUSES = [
+  { value: 'in_use', label: 'In Use' },
+  { value: 'empty', label: 'Empty' },
+  { value: 'stored', label: 'Stored' },
+  { value: 'disposed', label: 'Disposed' },
+  { value: 'in_transit', label: 'In Transit' },
+] as const;
+
+export const CLEANUP_STATUSES = [
+  { value: 'pending', label: 'Pending' },
+  { value: 'in_progress', label: 'In Progress' },
+  { value: 'completed', label: 'Completed' },
+  { value: 'verified', label: 'Verified' },
+] as const;
+
+export const OBJECTIVE_TYPES = [
+  { value: 'waste_reduction', label: 'Waste Reduction' },
+  { value: 'water_reduction', label: 'Water Reduction' },
+  { value: 'energy_efficiency', label: 'Energy Efficiency' },
+  { value: 'emission_reduction', label: 'Emission Reduction' },
+  { value: 'pollution_prevention', label: 'Pollution Prevention' },
+  { value: 'recycling', label: 'Recycling' },
+  { value: 'biodiversity', label: 'Biodiversity' },
+  { value: 'compliance', label: 'Compliance' },
+  { value: 'training', label: 'Training' },
+  { value: 'chemical_safety', label: 'Chemical Safety' },
+  { value: 'incident_reduction', label: 'Incident Reduction' },
+  { value: 'other', label: 'Other' },
+] as const;
+
+export const OBJECTIVE_STATUSES = [
+  { value: 'draft', label: 'Draft' },
+  { value: 'in_progress', label: 'In Progress' },
+  { value: 'achieved', label: 'Achieved' },
+  { value: 'missed', label: 'Missed' },
+  { value: 'cancelled', label: 'Cancelled' },
+  { value: 'on_hold', label: 'On Hold' },
+] as const;
+
+export const OBJECTIVE_PRIORITIES = [
+  { value: 'low', label: 'Low' },
+  { value: 'medium', label: 'Medium' },
+  { value: 'high', label: 'High' },
+  { value: 'critical', label: 'Critical' },
+] as const;
+
+export const MILESTONE_STATUSES = [
+  { value: 'pending', label: 'Pending' },
+  { value: 'in_progress', label: 'In Progress' },
+  { value: 'completed', label: 'Completed' },
+  { value: 'missed', label: 'Missed' },
+  { value: 'cancelled', label: 'Cancelled' },
+] as const;
+
+export const ENVIRONMENTAL_REPORT_TYPES = [
+  { value: 'environmental', label: 'Environmental Report' },
+  { value: 'water', label: 'Water Report' },
+  { value: 'waste', label: 'Waste Report' },
+  { value: 'air', label: 'Air Emissions Report' },
+  { value: 'chemical', label: 'Chemical Report' },
+  { value: 'incident', label: 'Incident Report' },
+  { value: 'permit', label: 'Permit Report' },
+  { value: 'biodiversity', label: 'Biodiversity Report' },
+  { value: 'executive', label: 'Executive Report' },
+  { value: 'compliance', label: 'Compliance Report' },
+] as const;
+
+export const REPORT_SCHEDULES = [
+  { value: 'none', label: 'No Schedule' },
+  { value: 'daily', label: 'Daily' },
+  { value: 'weekly', label: 'Weekly' },
+  { value: 'monthly', label: 'Monthly' },
+  { value: 'quarterly', label: 'Quarterly' },
+  { value: 'yearly', label: 'Yearly' },
+] as const;
+
+export const ENVIRONMENT_REPORT_FORMATS = [
+  { value: 'pdf', label: 'PDF' },
+  { value: 'xlsx', label: 'Excel' },
+  { value: 'csv', label: 'CSV' },
+  { value: 'docx', label: 'Word' },
 ] as const;

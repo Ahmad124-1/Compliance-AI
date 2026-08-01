@@ -61,6 +61,12 @@ import { calendarRoutes } from './routes/calendar.routes.js';
 import { channelManagerRoutes } from './routes/channel-manager.routes.js';
 import { sustainabilityRoutes } from './routes/sustainability.routes.js';
 import { carbonRoutes } from './routes/carbon.routes.js';
+import { sbtiRoutes } from './routes/sbti.routes.js';
+import { ghgRoutes } from './routes/ghg.routes.js';
+import { carbonSettingsRoutes } from './routes/carbon-settings.routes.js';
+import { carbonProjectsRoutes } from './routes/carbon-projects.routes.js';
+import { carbonOffsetsRoutes } from './routes/carbon-offsets.routes.js';
+import { carbonExecutiveRoutes } from './routes/carbon-executive.routes.js';
 import { environmentRoutes } from './routes/environment.routes.js';
 import { esgRoutes } from './routes/esg.routes.js';
 import { supplierRoutes } from './routes/suppliers.routes.js';
@@ -68,8 +74,20 @@ import { supplierEsgRoutes } from './routes/supplier-esg.routes.js';
 import { supplierRiskRoutes } from './routes/supplier-risk.routes.js';
 import { supplierAuditRoutes } from './routes/supplier-audits.routes.js';
 import { supplierScorecardRoutes } from './routes/supplier-scorecards.routes.js';
+import { supplierCarbonRoutes } from './routes/supplier-carbon.routes.js';
 import { responsibleSourcingRoutes } from './routes/responsible-sourcing.routes.js';
 import { certificationRoutes } from './routes/certifications.routes.js';
+import { waterRoutes } from './routes/water.routes.js';
+import { wasteRoutes } from './routes/waste.routes.js';
+import { airRoutes } from './routes/air.routes.js';
+import { chemicalsRoutes } from './routes/chemicals.routes.js';
+import { environmentalIncidentsRoutes } from './routes/environmental-incidents.routes.js';
+import { environmentalPermitsRoutes } from './routes/environmental-permits.routes.js';
+import { biodiversityRoutes } from './routes/biodiversity.routes.js';
+import { environmentalObjectivesRoutes } from './routes/environmental-objectives.routes.js';
+import { environmentalReportsRoutes } from './routes/environmental-reports.routes.js';
+import { environmentalAiRoutes } from './routes/environmental-ai.routes.js';
+import { complianceRoutes } from './routes/compliance.routes.js';
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -133,6 +151,9 @@ export async function buildServer(): Promise<FastifyInstance> {
   // Sprint3D: Security review
   await app.register(securityRoutes, { prefix: '/api/v1' });
 
+  // Sprint 8C: Compliance status aggregation (Analytics > Compliance Score)
+  await app.register(complianceRoutes, { prefix: '/api/v1' });
+
   // Sprint 4A: Assessment Framework Engine
   await app.register(assessmentRoutes, { prefix: '/api/v1' });
 
@@ -185,9 +206,25 @@ export async function buildServer(): Promise<FastifyInstance> {
 
   // Sprint 7B: Carbon & GHG Accounting Platform
   await app.register(carbonRoutes, { prefix: '/api/v1' });
+  await app.register(sbtiRoutes, { prefix: '/api/v1' });
+  await app.register(ghgRoutes, { prefix: '/api/v1' });
+  await app.register(carbonSettingsRoutes, { prefix: '/api/v1' });
+  await app.register(carbonProjectsRoutes, { prefix: '/api/v1' });
+  await app.register(carbonOffsetsRoutes, { prefix: '/api/v1' });
+  await app.register(carbonExecutiveRoutes, { prefix: '/api/v1' });
 
-  // Sprint 7C: Environmental Management System
+  // Sprint 7C: Environmental Management System (ISO 14001)
   await app.register(environmentRoutes, { prefix: '/api/v1' });
+  await app.register(waterRoutes, { prefix: '/api/v1' });
+  await app.register(wasteRoutes, { prefix: '/api/v1' });
+  await app.register(airRoutes, { prefix: '/api/v1' });
+  await app.register(chemicalsRoutes, { prefix: '/api/v1' });
+  await app.register(environmentalIncidentsRoutes, { prefix: '/api/v1' });
+  await app.register(environmentalPermitsRoutes, { prefix: '/api/v1' });
+  await app.register(biodiversityRoutes, { prefix: '/api/v1' });
+  await app.register(environmentalObjectivesRoutes, { prefix: '/api/v1' });
+  await app.register(environmentalReportsRoutes, { prefix: '/api/v1' });
+  await app.register(environmentalAiRoutes, { prefix: '/api/v1' });
 
   // Sprint 8A: Enterprise ESG Reporting & Disclosure
   await app.register(esgRoutes, { prefix: '/api/v1' });
@@ -198,6 +235,7 @@ export async function buildServer(): Promise<FastifyInstance> {
   await app.register(supplierRiskRoutes, { prefix: '/api/v1' });
   await app.register(supplierAuditRoutes, { prefix: '/api/v1' });
   await app.register(supplierScorecardRoutes, { prefix: '/api/v1' });
+  await app.register(supplierCarbonRoutes, { prefix: '/api/v1' });
   await app.register(responsibleSourcingRoutes, { prefix: '/api/v1' });
   await app.register(certificationRoutes, { prefix: '/api/v1' });
 

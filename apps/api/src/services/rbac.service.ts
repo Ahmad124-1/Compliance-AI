@@ -36,9 +36,12 @@ export const rbacService = {
 
   async ensureSeeded(): Promise<void> {
     const existing = await permissionRepo.list();
-    if (existing.length) return;
+    const existingKeys = new Set(existing.map((p) => p.key));
     const catalogue = buildPermissionCatalogue();
-    for (const p of catalogue) await permissionRepo.create(p);
+    const missing = catalogue.filter((p) => !existingKeys.has(p.key));
+    if (!existing.length || missing.length) {
+      for (const p of missing) await permissionRepo.create(p);
+    }
   },
 
   async groups() {
@@ -61,7 +64,11 @@ const resources = ['org', 'site', 'department', 'team', 'user', 'role',
 'permission', 'profile', 'standard', 'framework', 'grievance', 'case', 'investigation', 'evidence', 'witness', 
 'interview', 'finding', 'root_cause', 'resolution', 'escalation', 'risk', 'ai', 'audit', 'search', 'notification', 
 'sla', 'queue', 'qr', 'template', 'communication', 'analytics', 'assessment', 'engagement', 'survey', 'recognition', 
-'wellbeing', 'community', 'event', 'sustainability', 'environment'];
+'wellbeing', 'community', 'event', 'sustainability', 'environment', 'carbon', 'esg', 'suppliers', 'supplier', 
+'compliance', 'policy', 'policy_generator', 'document', 'certification', 'water', 'waste', 'air', 'chemical', 
+'biodiversity']; 
+// Supplier routes use the `suppliers` resource; supplier-carbon uses `suppliers:*`.
+// Carbon & GHG routes accept both `carbon:*` and `sustainability:*` (modules share the accounting domain).
   const actions = ['read', 'create', 'update', 'delete', 'assign'];
   const items: PermissionCatalogueItem[] = [];
   for (const resource of resources) {

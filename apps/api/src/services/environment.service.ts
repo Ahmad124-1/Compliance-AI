@@ -1,5 +1,27 @@
 import { audit } from '../core/audit.js';
 import { NotFoundError } from '../core/errors.js';
+import type {
+  AirEmissionType,
+  ApprovalStatus,
+  EnvironmentalDashboard,
+  EnvironmentalProjectType,
+  HazardClassification,
+  IncidentSeverity,
+  IncidentStatus,
+  IncidentType,
+  InvestigationStatus,
+  LikelihoodLevel,
+  PermitStatus,
+  PermitType,
+  ProjectStatus,
+  ResourceType,
+  ReviewSchedule,
+  RiskRating,
+  RiskStatus,
+  SeverityLevel,
+  WasteType,
+  WaterSourceType,
+} from '../types/environment.js';
 import { waterUsageRepo } from '../repositories/water-usage.repo.js';
 import { wasteRecordRepo } from '../repositories/waste-record.repo.js';
 import { airEmissionRepo } from '../repositories/air-emission.repo.js';

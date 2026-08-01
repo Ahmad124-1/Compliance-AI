@@ -226,11 +226,16 @@ const calculateEmissionSchema = z.object({
   calculationType: z.string().default('standard'),
 });
 
+/** Helper to build a combined-carbon permission guard that accepts carbon:* OR sustainability:*. */
+function carbonPermission(action: 'read' | 'create' | 'update' | 'delete'): ReturnType<typeof requirePermission> {
+  return requirePermission(`carbon:${action}`, `sustainability:${action}`);
+}
+
 export async function carbonRoutes(app: FastifyInstance): Promise<void> {
   app.addHook('preHandler', authenticate);
 
   // ---- Facilities ----
-  app.get('/carbon/facilities', { preHandler: requirePermission('sustainability:read') }, async (req) => {
+  app.get('/carbon/facilities', { preHandler: carbonPermission('read') }, async (req) => {
     const auth = getAuth(req);
     const q = req.query as Record<string, string | undefined>;
     return carbonService.listFacilities(auth.org, {
@@ -240,31 +245,31 @@ export async function carbonRoutes(app: FastifyInstance): Promise<void> {
     });
   });
 
-  app.get('/carbon/facilities/:id', { preHandler: requirePermission('sustainability:read') }, async (req) => {
+  app.get('/carbon/facilities/:id', { preHandler: carbonPermission('read') }, async (req) => {
     const auth = getAuth(req);
     const { id } = req.params as { id: string };
     return carbonService.getFacility(auth.org, id);
   });
 
-  app.post('/carbon/facilities', { preHandler: requirePermission('sustainability:create'), schema: { body: facilityCreateSchema } }, async (req) => {
+  app.post('/carbon/facilities', { preHandler: carbonPermission('create'), schema: { body: facilityCreateSchema } }, async (req) => {
     const auth = getAuth(req);
     return carbonService.createFacility(auth.org, req.body as z.infer<typeof facilityCreateSchema>);
   });
 
-  app.patch('/carbon/facilities/:id', { preHandler: requirePermission('sustainability:update'), schema: { body: facilityUpdateSchema } }, async (req) => {
+  app.patch('/carbon/facilities/:id', { preHandler: carbonPermission('update'), schema: { body: facilityUpdateSchema } }, async (req) => {
     const auth = getAuth(req);
     const { id } = req.params as { id: string };
     return carbonService.updateFacility(auth.org, id, req.body as Partial<z.infer<typeof facilityCreateSchema>>);
   });
 
-  app.delete('/carbon/facilities/:id', { preHandler: requirePermission('sustainability:delete') }, async (req) => {
+  app.delete('/carbon/facilities/:id', { preHandler: carbonPermission('delete') }, async (req) => {
     const auth = getAuth(req);
     const { id } = req.params as { id: string };
     return carbonService.deleteFacility(auth.org, id);
   });
 
   // ---- Emission Sources ----
-  app.get('/carbon/emission-sources', { preHandler: requirePermission('sustainability:read') }, async (req) => {
+  app.get('/carbon/emission-sources', { preHandler: carbonPermission('read') }, async (req) => {
     const auth = getAuth(req);
     const q = req.query as Record<string, string | undefined>;
     return carbonService.listEmissionSources(auth.org, {
@@ -276,54 +281,54 @@ export async function carbonRoutes(app: FastifyInstance): Promise<void> {
     });
   });
 
-  app.get('/carbon/emission-sources/:id', { preHandler: requirePermission('sustainability:read') }, async (req) => {
+  app.get('/carbon/emission-sources/:id', { preHandler: carbonPermission('read') }, async (req) => {
     const auth = getAuth(req);
     const { id } = req.params as { id: string };
     return carbonService.getEmissionSource(auth.org, id);
   });
 
-  app.post('/carbon/emission-sources', { preHandler: requirePermission('sustainability:create'), schema: { body: emissionSourceCreateSchema } }, async (req) => {
+  app.post('/carbon/emission-sources', { preHandler: carbonPermission('create'), schema: { body: emissionSourceCreateSchema } }, async (req) => {
     const auth = getAuth(req);
     return carbonService.createEmissionSource(auth.org, req.body as z.infer<typeof emissionSourceCreateSchema>);
   });
 
-  app.patch('/carbon/emission-sources/:id', { preHandler: requirePermission('sustainability:update'), schema: { body: emissionSourceUpdateSchema } }, async (req) => {
+  app.patch('/carbon/emission-sources/:id', { preHandler: carbonPermission('update'), schema: { body: emissionSourceUpdateSchema } }, async (req) => {
     const auth = getAuth(req);
     const { id } = req.params as { id: string };
     return carbonService.updateEmissionSource(auth.org, id, req.body as Partial<z.infer<typeof emissionSourceCreateSchema>>);
   });
 
-  app.delete('/carbon/emission-sources/:id', { preHandler: requirePermission('sustainability:delete') }, async (req) => {
+  app.delete('/carbon/emission-sources/:id', { preHandler: carbonPermission('delete') }, async (req) => {
     const auth = getAuth(req);
     const { id } = req.params as { id: string };
     return carbonService.deleteEmissionSource(auth.org, id);
   });
 
   // ---- Scopes ----
-  app.get('/carbon/scopes', { preHandler: requirePermission('sustainability:read') }, async (req) => {
+  app.get('/carbon/scopes', { preHandler: carbonPermission('read') }, async (req) => {
     const auth = getAuth(req);
     return carbonService.listScopes(auth.org);
   });
 
-  app.get('/carbon/scopes/:id', { preHandler: requirePermission('sustainability:read') }, async (req) => {
+  app.get('/carbon/scopes/:id', { preHandler: carbonPermission('read') }, async (req) => {
     const auth = getAuth(req);
     const { id } = req.params as { id: string };
     return carbonService.getScope(auth.org, id);
   });
 
-  app.post('/carbon/scopes', { preHandler: requirePermission('sustainability:create'), schema: { body: scopeCreateSchema } }, async (req) => {
+  app.post('/carbon/scopes', { preHandler: carbonPermission('create'), schema: { body: scopeCreateSchema } }, async (req) => {
     const auth = getAuth(req);
     return carbonService.createScope(auth.org, req.body as z.infer<typeof scopeCreateSchema>);
   });
 
-  app.patch('/carbon/scopes/:id', { preHandler: requirePermission('sustainability:update'), schema: { body: scopeUpdateSchema } }, async (req) => {
+  app.patch('/carbon/scopes/:id', { preHandler: carbonPermission('update'), schema: { body: scopeUpdateSchema } }, async (req) => {
     const auth = getAuth(req);
     const { id } = req.params as { id: string };
     return carbonService.updateScope(auth.org, id, req.body as Partial<z.infer<typeof scopeCreateSchema>>);
   });
 
   // ---- Emission Records ----
-  app.get('/carbon/emissions', { preHandler: requirePermission('sustainability:read') }, async (req) => {
+  app.get('/carbon/emissions', { preHandler: carbonPermission('read') }, async (req) => {
     const auth = getAuth(req);
     const q = req.query as Record<string, string | undefined>;
     return carbonService.listEmissionRecords(auth.org, {
@@ -337,31 +342,31 @@ export async function carbonRoutes(app: FastifyInstance): Promise<void> {
     });
   });
 
-  app.get('/carbon/emissions/:id', { preHandler: requirePermission('sustainability:read') }, async (req) => {
+  app.get('/carbon/emissions/:id', { preHandler: carbonPermission('read') }, async (req) => {
     const auth = getAuth(req);
     const { id } = req.params as { id: string };
     return carbonService.getEmissionRecord(auth.org, id);
   });
 
-  app.post('/carbon/emissions', { preHandler: requirePermission('sustainability:create'), schema: { body: emissionRecordCreateSchema } }, async (req) => {
+  app.post('/carbon/emissions', { preHandler: carbonPermission('create'), schema: { body: emissionRecordCreateSchema } }, async (req) => {
     const auth = getAuth(req);
     return carbonService.createEmissionRecord(auth.org, req.body as z.infer<typeof emissionRecordCreateSchema>, auth.sub);
   });
 
-  app.patch('/carbon/emissions/:id', { preHandler: requirePermission('sustainability:update'), schema: { body: emissionRecordUpdateSchema } }, async (req) => {
+  app.patch('/carbon/emissions/:id', { preHandler: carbonPermission('update'), schema: { body: emissionRecordUpdateSchema } }, async (req) => {
     const auth = getAuth(req);
     const { id } = req.params as { id: string };
     return carbonService.updateEmissionRecord(auth.org, id, req.body as Partial<z.infer<typeof emissionRecordCreateSchema>>, auth.sub);
   });
 
-  app.delete('/carbon/emissions/:id', { preHandler: requirePermission('sustainability:delete') }, async (req) => {
+  app.delete('/carbon/emissions/:id', { preHandler: carbonPermission('delete') }, async (req) => {
     const auth = getAuth(req);
     const { id } = req.params as { id: string };
     return carbonService.deleteEmissionRecord(auth.org, id, auth.sub);
   });
 
   // ---- Emission Factors ----
-  app.get('/carbon/emission-factors', { preHandler: requirePermission('sustainability:read') }, async (req) => {
+  app.get('/carbon/emission-factors', { preHandler: carbonPermission('read') }, async (req) => {
     const auth = getAuth(req);
     const q = req.query as Record<string, string | undefined>;
     return carbonService.listEmissionFactors(auth.org, {
@@ -373,25 +378,25 @@ export async function carbonRoutes(app: FastifyInstance): Promise<void> {
     });
   });
 
-  app.get('/carbon/emission-factors/:id', { preHandler: requirePermission('sustainability:read') }, async (req) => {
+  app.get('/carbon/emission-factors/:id', { preHandler: carbonPermission('read') }, async (req) => {
     const auth = getAuth(req);
     const { id } = req.params as { id: string };
     return carbonService.getEmissionFactor(auth.org, id);
   });
 
-  app.post('/carbon/emission-factors', { preHandler: requirePermission('sustainability:create'), schema: { body: emissionFactorCreateSchema } }, async (req) => {
+  app.post('/carbon/emission-factors', { preHandler: carbonPermission('create'), schema: { body: emissionFactorCreateSchema } }, async (req) => {
     const auth = getAuth(req);
     return carbonService.createEmissionFactor(auth.org, req.body as z.infer<typeof emissionFactorCreateSchema>);
   });
 
-  app.patch('/carbon/emission-factors/:id', { preHandler: requirePermission('sustainability:update'), schema: { body: emissionFactorUpdateSchema } }, async (req) => {
+  app.patch('/carbon/emission-factors/:id', { preHandler: carbonPermission('update'), schema: { body: emissionFactorUpdateSchema } }, async (req) => {
     const auth = getAuth(req);
     const { id } = req.params as { id: string };
     return carbonService.updateEmissionFactor(auth.org, id, req.body as Partial<z.infer<typeof emissionFactorCreateSchema>>);
   });
 
   // ---- Carbon Projects ----
-  app.get('/carbon/projects', { preHandler: requirePermission('sustainability:read') }, async (req) => {
+  app.get('/carbon/projects', { preHandler: carbonPermission('read') }, async (req) => {
     const auth = getAuth(req);
     const q = req.query as Record<string, string | undefined>;
     return carbonService.listCarbonProjects(auth.org, {
@@ -403,25 +408,25 @@ export async function carbonRoutes(app: FastifyInstance): Promise<void> {
     });
   });
 
-  app.get('/carbon/projects/:id', { preHandler: requirePermission('sustainability:read') }, async (req) => {
+  app.get('/carbon/projects/:id', { preHandler: carbonPermission('read') }, async (req) => {
     const auth = getAuth(req);
     const { id } = req.params as { id: string };
     return carbonService.getCarbonProject(auth.org, id);
   });
 
-  app.post('/carbon/projects', { preHandler: requirePermission('sustainability:create'), schema: { body: carbonProjectCreateSchema } }, async (req) => {
+  app.post('/carbon/projects', { preHandler: carbonPermission('create'), schema: { body: carbonProjectCreateSchema } }, async (req) => {
     const auth = getAuth(req);
     return carbonService.createCarbonProject(auth.org, req.body as z.infer<typeof carbonProjectCreateSchema>);
   });
 
-  app.patch('/carbon/projects/:id', { preHandler: requirePermission('sustainability:update'), schema: { body: carbonProjectUpdateSchema } }, async (req) => {
+  app.patch('/carbon/projects/:id', { preHandler: carbonPermission('update'), schema: { body: carbonProjectUpdateSchema } }, async (req) => {
     const auth = getAuth(req);
     const { id } = req.params as { id: string };
     return carbonService.updateCarbonProject(auth.org, id, req.body as Partial<z.infer<typeof carbonProjectCreateSchema>>);
   });
 
   // ---- Carbon Offsets ----
-  app.get('/carbon/offsets', { preHandler: requirePermission('sustainability:read') }, async (req) => {
+  app.get('/carbon/offsets', { preHandler: carbonPermission('read') }, async (req) => {
     const auth = getAuth(req);
     const q = req.query as Record<string, string | undefined>;
     return carbonService.listCarbonOffsets(auth.org, {
@@ -432,25 +437,25 @@ export async function carbonRoutes(app: FastifyInstance): Promise<void> {
     });
   });
 
-  app.get('/carbon/offsets/:id', { preHandler: requirePermission('sustainability:read') }, async (req) => {
+  app.get('/carbon/offsets/:id', { preHandler: carbonPermission('read') }, async (req) => {
     const auth = getAuth(req);
     const { id } = req.params as { id: string };
     return carbonService.getCarbonOffset(auth.org, id);
   });
 
-  app.post('/carbon/offsets', { preHandler: requirePermission('sustainability:create'), schema: { body: carbonOffsetCreateSchema } }, async (req) => {
+  app.post('/carbon/offsets', { preHandler: carbonPermission('create'), schema: { body: carbonOffsetCreateSchema } }, async (req) => {
     const auth = getAuth(req);
     return carbonService.createCarbonOffset(auth.org, req.body as z.infer<typeof carbonOffsetCreateSchema>);
   });
 
-  app.patch('/carbon/offsets/:id', { preHandler: requirePermission('sustainability:update'), schema: { body: carbonOffsetUpdateSchema } }, async (req) => {
+  app.patch('/carbon/offsets/:id', { preHandler: carbonPermission('update'), schema: { body: carbonOffsetUpdateSchema } }, async (req) => {
     const auth = getAuth(req);
     const { id } = req.params as { id: string };
     return carbonService.updateCarbonOffset(auth.org, id, req.body as Partial<z.infer<typeof carbonOffsetCreateSchema>>);
   });
 
   // ---- Reduction Targets ----
-  app.get('/carbon/targets', { preHandler: requirePermission('sustainability:read') }, async (req) => {
+  app.get('/carbon/targets', { preHandler: carbonPermission('read') }, async (req) => {
     const auth = getAuth(req);
     const q = req.query as Record<string, string | undefined>;
     return carbonService.listReductionTargets(auth.org, {
@@ -462,25 +467,25 @@ export async function carbonRoutes(app: FastifyInstance): Promise<void> {
     });
   });
 
-  app.get('/carbon/targets/:id', { preHandler: requirePermission('sustainability:read') }, async (req) => {
+  app.get('/carbon/targets/:id', { preHandler: carbonPermission('read') }, async (req) => {
     const auth = getAuth(req);
     const { id } = req.params as { id: string };
     return carbonService.getReductionTarget(auth.org, id);
   });
 
-  app.post('/carbon/targets', { preHandler: requirePermission('sustainability:create'), schema: { body: reductionTargetCreateSchema } }, async (req) => {
+  app.post('/carbon/targets', { preHandler: carbonPermission('create'), schema: { body: reductionTargetCreateSchema } }, async (req) => {
     const auth = getAuth(req);
     return carbonService.createReductionTarget(auth.org, req.body as z.infer<typeof reductionTargetCreateSchema>);
   });
 
-  app.patch('/carbon/targets/:id', { preHandler: requirePermission('sustainability:update'), schema: { body: reductionTargetUpdateSchema } }, async (req) => {
+  app.patch('/carbon/targets/:id', { preHandler: carbonPermission('update'), schema: { body: reductionTargetUpdateSchema } }, async (req) => {
     const auth = getAuth(req);
     const { id } = req.params as { id: string };
     return carbonService.updateReductionTarget(auth.org, id, req.body as Partial<z.infer<typeof reductionTargetCreateSchema>>);
   });
 
   // ---- Carbon Reports ----
-  app.get('/carbon/reports', { preHandler: requirePermission('sustainability:read') }, async (req) => {
+  app.get('/carbon/reports', { preHandler: carbonPermission('read') }, async (req) => {
     const auth = getAuth(req);
     const q = req.query as Record<string, string | undefined>;
     return carbonService.listCarbonReports(auth.org, {
@@ -491,37 +496,37 @@ export async function carbonRoutes(app: FastifyInstance): Promise<void> {
     });
   });
 
-  app.get('/carbon/reports/:id', { preHandler: requirePermission('sustainability:read') }, async (req) => {
+  app.get('/carbon/reports/:id', { preHandler: carbonPermission('read') }, async (req) => {
     const auth = getAuth(req);
     const { id } = req.params as { id: string };
     return carbonService.getCarbonReport(auth.org, id);
   });
 
-  app.post('/carbon/reports', { preHandler: requirePermission('sustainability:create'), schema: { body: carbonReportCreateSchema } }, async (req) => {
+  app.post('/carbon/reports', { preHandler: carbonPermission('create'), schema: { body: carbonReportCreateSchema } }, async (req) => {
     const auth = getAuth(req);
     return carbonService.createCarbonReport(auth.org, req.body as z.infer<typeof carbonReportCreateSchema>);
   });
 
-  app.patch('/carbon/reports/:id', { preHandler: requirePermission('sustainability:update'), schema: { body: carbonReportUpdateSchema } }, async (req) => {
+  app.patch('/carbon/reports/:id', { preHandler: carbonPermission('update'), schema: { body: carbonReportUpdateSchema } }, async (req) => {
     const auth = getAuth(req);
     const { id } = req.params as { id: string };
     return carbonService.updateCarbonReport(auth.org, id, req.body as Partial<z.infer<typeof carbonReportCreateSchema>>);
   });
 
   // ---- Dashboard ----
-  app.get('/carbon/dashboard', { preHandler: requirePermission('sustainability:read') }, async (req) => {
+  app.get('/carbon/dashboard', { preHandler: carbonPermission('read') }, async (req) => {
     const auth = getAuth(req);
     return carbonService.getDashboard(auth.org);
   });
 
   // ---- Calculator ----
-  app.post('/carbon/calculate', { preHandler: requirePermission('sustainability:create'), schema: { body: calculateEmissionSchema } }, async (req) => {
+  app.post('/carbon/calculate', { preHandler: carbonPermission('create'), schema: { body: calculateEmissionSchema } }, async (req) => {
     const auth = getAuth(req);
     return carbonService.calculateEmission(auth.org, req.body as z.infer<typeof calculateEmissionSchema>, auth.sub);
   });
 
   // ---- Calculation History ----
-  app.get('/carbon/calculations', { preHandler: requirePermission('sustainability:read') }, async (req) => {
+  app.get('/carbon/calculations', { preHandler: carbonPermission('read') }, async (req) => {
     const auth = getAuth(req);
     const q = req.query as Record<string, string | undefined>;
     return carbonService.listCalculationHistory(auth.org, {

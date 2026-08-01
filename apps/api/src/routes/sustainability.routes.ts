@@ -121,7 +121,7 @@ const evidenceCreateSchema = z.object({
 });
 
 const _approvalTransitionStatuses = ['draft', 'submitted', 'under_review', 'approved', 'rejected', 'archived'] as const;
-type ApprovalTransitionStatus = typeof approvalTransitionStatuses[number];
+type ApprovalTransitionStatus = (typeof _approvalTransitionStatuses)[number];
 
 const reportCreateSchema = z.object({
   programId: z.string().uuid().nullable().optional(),
