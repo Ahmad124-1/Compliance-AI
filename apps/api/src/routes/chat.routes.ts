@@ -53,11 +53,6 @@ export async function chatRoutes(app: FastifyInstance): Promise<void> {
     return chatModuleService.searchConversations(auth.org, q.query);
   });
 
-  app.get('/ai/chat/conversations/:id', { preHandler: requirePermission('ai:read') }, async (req) => {
-    const { id } = req.params as { id: string };
-    return chatModuleService.getConversation(id);
-  });
-
   const sendMessageSchema = z.object({
     message: z.string().min(1),
     supplierId: z.string().uuid().optional(),

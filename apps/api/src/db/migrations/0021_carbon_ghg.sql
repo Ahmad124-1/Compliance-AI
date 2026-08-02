@@ -41,9 +41,10 @@ CREATE TABLE IF NOT EXISTS ghg_scopes (
   description TEXT,
   is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  UNIQUE(organization_id, scope_number) WHERE is_deleted = FALSE
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS uq_ghg_scopes_org_scope_number ON ghg_scopes(organization_id, scope_number) WHERE is_deleted = FALSE;
 
 CREATE INDEX IF NOT EXISTS idx_ghg_scopes_org ON ghg_scopes(organization_id) WHERE is_deleted = FALSE;
 

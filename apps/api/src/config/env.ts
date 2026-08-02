@@ -1,4 +1,10 @@
-import 'dotenv/config';
+import path from 'node:path';
+import dotenv from 'dotenv';
+
+// Monorepo: turbo runs package scripts with CWD = apps/api, so load the
+// workspace root .env explicitly (resolved from this file's location).
+const rootEnvPath = path.resolve(import.meta.dirname, '../../../.env');
+dotenv.config({ path: rootEnvPath });
 
 /**
  * Typed environment access. Values come from process.env (loaded via dotenv).

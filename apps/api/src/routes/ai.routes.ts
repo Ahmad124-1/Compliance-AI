@@ -16,13 +16,6 @@ const analyzeSchema = z.object({
 export async function aiRoutes(app: FastifyInstance): Promise<void> {
   app.addHook('preHandler', authenticate);
 
-  app.get('/ai/capabilities', { preHandler: requirePermission('ai:read') }, async () => {
-    return {
-      provider: aiService.activeProvider(),
-      capabilities: aiService.capabilities(),
-    };
-  });
-
   app.post('/ai/analyze', { preHandler: requirePermission('ai:read'), schema: { body: analyzeSchema } }, async (req) => {
     const auth = getAuth(req);
     const body = req.body as z.infer<typeof analyzeSchema>;

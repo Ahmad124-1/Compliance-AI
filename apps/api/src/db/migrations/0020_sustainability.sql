@@ -1,3 +1,25 @@
+-- =============================================================================
+-- 0020 - Sustainability Module
+-- Reordered so every referenced object exists before it is referenced.
+--
+-- Dependency resolution performed:
+--   1. sustainability_initiatives moved BEFORE sustainability_kpis
+--      (sustainability_kpis.initiative_id FK references it).
+--   2. documents table created BEFORE sustainability_evidence
+--      (sustainability_evidence.document_id FK references documents(id);
+--       no prior migration creates this table).
+--   3. All base tables (organizations, users, departments, sites) come from
+--      migration 0001_multi_tenant_core.sql and are guaranteed to exist.
+--
+-- No circular dependencies exist between tables in this module; the
+-- initiative/kpi case was a forward reference, resolved by ordering.
+-- All statements are idempotent (IF NOT EXISTS).
+-- =============================================================================
+
+-- -----------------------------------------------------------------------------
+-- 1. sustainability_programs
+--    Depends on: organizations, users, departments (migration 0001)
+-- -----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS sustainability_programs (
   id UUID PRIMARY KEY,
   organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
@@ -25,6 +47,10 @@ CREATE INDEX IF NOT EXISTS idx_sustainability_programs_org ON sustainability_pro
 CREATE INDEX IF NOT EXISTS idx_sustainability_programs_status ON sustainability_programs(organization_id, status) WHERE is_deleted = FALSE;
 CREATE INDEX IF NOT EXISTS idx_sustainability_programs_category ON sustainability_programs(organization_id, category) WHERE is_deleted = FALSE;
 
+-- -----------------------------------------------------------------------------
+-- 2. esg_goals
+--    Depends on: organizations, users (migration 0001), sustainability_programs
+-- -----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS esg_goals (
   id UUID PRIMARY KEY,
   organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
@@ -53,6 +79,44 @@ CREATE INDEX IF NOT EXISTS idx_esg_goals_pillar ON esg_goals(organization_id, es
 CREATE INDEX IF NOT EXISTS idx_esg_goals_status ON esg_goals(organization_id, status) WHERE is_deleted = FALSE;
 CREATE INDEX IF NOT EXISTS idx_esg_goals_program ON esg_goals(program_id) WHERE is_deleted = FALSE;
 
+-- -----------------------------------------------------------------------------
+-- 3. sustainability_initiatives
+--    Depends on: organizations, users (migration 0001), sustainability_programs
+--    NOTE: Moved BEFORE sustainability_kpis so that the FK from
+--          sustainability_kpis.initiative_id resolves correctly.
+-- -----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS sustainability_initiatives (
+  id UUID PRIMARY KEY,
+  organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+  program_id UUID REFERENCES sustainability_programs(id) ON DELETE SET NULL,
+  name TEXT NOT NULL,
+  description TEXT,
+  owner_id UUID REFERENCES users(id) ON DELETE SET NULL,
+  team TEXT NOT NULL DEFAULT '',
+  start_date DATE,
+  due_date DATE,
+  budget NUMERIC(14,2),
+  expected_impact TEXT,
+  actual_impact TEXT,
+  status TEXT NOT NULL DEFAULT 'planning' CHECK (status IN ('planning','active','on_hold','completed','cancelled','archived')),
+  milestones_count INT NOT NULL DEFAULT 0,
+  evidence_count INT NOT NULL DEFAULT 0,
+  risk_level TEXT NOT NULL DEFAULT 'low' CHECK (risk_level IN ('low','medium','high','critical')),
+  linked_sdgs INTEGER[] NOT NULL DEFAULT '{}',
+  is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_sustainability_initiatives_org ON sustainability_initiatives(organization_id) WHERE is_deleted = FALSE;
+CREATE INDEX IF NOT EXISTS idx_sustainability_initiatives_program ON sustainability_initiatives(program_id) WHERE is_deleted = FALSE;
+CREATE INDEX IF NOT EXISTS idx_sustainability_initiatives_status ON sustainability_initiatives(organization_id, status) WHERE is_deleted = FALSE;
+
+-- -----------------------------------------------------------------------------
+-- 4. sustainability_kpis
+--    Depends on: organizations, users, departments, sites (migration 0001),
+--                sustainability_programs, esg_goals, sustainability_initiatives
+-- -----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS sustainability_kpis (
   id UUID PRIMARY KEY,
   organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
@@ -82,6 +146,11 @@ CREATE INDEX IF NOT EXISTS idx_sustainability_kpis_program ON sustainability_kpi
 CREATE INDEX IF NOT EXISTS idx_sustainability_kpis_goal ON sustainability_kpis(goal_id) WHERE is_deleted = FALSE;
 CREATE INDEX IF NOT EXISTS idx_sustainability_kpis_initiative ON sustainability_kpis(initiative_id) WHERE is_deleted = FALSE;
 
+-- -----------------------------------------------------------------------------
+-- 5. kpi_measurements
+--    Depends on: organizations, users, departments, sites (migration 0001),
+--                sustainability_kpis
+-- -----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS kpi_measurements (
   id UUID PRIMARY KEY,
   organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
@@ -99,33 +168,10 @@ CREATE TABLE IF NOT EXISTS kpi_measurements (
 CREATE INDEX IF NOT EXISTS idx_kpi_measurements_kpi ON kpi_measurements(kpi_id, recorded_at DESC);
 CREATE INDEX IF NOT EXISTS idx_kpi_measurements_org ON kpi_measurements(organization_id, recorded_at DESC);
 
-CREATE TABLE IF NOT EXISTS sustainability_initiatives (
-  id UUID PRIMARY KEY,
-  organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
-  program_id UUID REFERENCES sustainability_programs(id) ON DELETE SET NULL,
-  name TEXT NOT NULL,
-  description TEXT,
-  owner_id UUID REFERENCES users(id) ON DELETE SET NULL,
-  team TEXT NOT NULL DEFAULT '',
-  start_date DATE,
-  due_date DATE,
-  budget NUMERIC(14,2),
-  expected_impact TEXT,
-  actual_impact TEXT,
-  status TEXT NOT NULL DEFAULT 'planning' CHECK (status IN ('planning','active','on_hold','completed','cancelled','archived')),
-  milestones_count INT NOT NULL DEFAULT 0,
-  evidence_count INT NOT NULL DEFAULT 0,
-  risk_level TEXT NOT NULL DEFAULT 'low' CHECK (risk_level IN ('low','medium','high','critical')),
-  linked_sdgs INTEGER[] NOT NULL DEFAULT '{}',
-  is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
-CREATE INDEX IF NOT EXISTS idx_sustainability_initiatives_org ON sustainability_initiatives(organization_id) WHERE is_deleted = FALSE;
-CREATE INDEX IF NOT EXISTS idx_sustainability_initiatives_program ON sustainability_initiatives(program_id) WHERE is_deleted = FALSE;
-CREATE INDEX IF NOT EXISTS idx_sustainability_initiatives_status ON sustainability_initiatives(organization_id, status) WHERE is_deleted = FALSE;
-
+-- -----------------------------------------------------------------------------
+-- 6. initiative_milestones
+--    Depends on: organizations, users (migration 0001), sustainability_initiatives
+-- -----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS initiative_milestones (
   id UUID PRIMARY KEY,
   organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
@@ -146,6 +192,10 @@ CREATE TABLE IF NOT EXISTS initiative_milestones (
 CREATE INDEX IF NOT EXISTS idx_initiative_milestones_initiative ON initiative_milestones(initiative_id, sort_order);
 CREATE INDEX IF NOT EXISTS idx_initiative_milestones_org ON initiative_milestones(organization_id) WHERE is_deleted = FALSE;
 
+-- -----------------------------------------------------------------------------
+-- 7. sdg_mappings
+--    Depends on: organizations (migration 0001)
+-- -----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS sdg_mappings (
   id UUID PRIMARY KEY,
   organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
@@ -162,6 +212,35 @@ CREATE TABLE IF NOT EXISTS sdg_mappings (
 CREATE INDEX IF NOT EXISTS idx_sdg_mappings_org ON sdg_mappings(organization_id);
 CREATE INDEX IF NOT EXISTS idx_sdg_mappings_entity ON sdg_mappings(entity_type, entity_id);
 
+-- -----------------------------------------------------------------------------
+-- 8. documents
+--    Depends on: organizations, users (migration 0001)
+--    Missing dependency: sustainability_evidence references documents(id), but
+--    no prior migration creates this table. It is defined here (before
+--    sustainability_evidence) with the schema matching the application's
+--    DocumentRecord contract. IF NOT EXISTS keeps this idempotent for any
+--    environment where the table was created out-of-band.
+-- -----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS documents (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+  uploaded_by UUID REFERENCES users(id) ON DELETE SET NULL,
+  filename TEXT NOT NULL,
+  content_type TEXT NOT NULL,
+  size_bytes BIGINT NOT NULL DEFAULT 0,
+  extracted_text TEXT,
+  metadata JSONB NOT NULL DEFAULT '{}',
+  status TEXT NOT NULL DEFAULT 'processing' CHECK (status IN ('processing','ready','failed','archived')),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_documents_org ON documents(organization_id);
+
+-- -----------------------------------------------------------------------------
+-- 9. sustainability_evidence
+--    Depends on: organizations, users (migration 0001), documents
+-- -----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS sustainability_evidence (
   id UUID PRIMARY KEY,
   organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
@@ -186,6 +265,10 @@ CREATE INDEX IF NOT EXISTS idx_sustainability_evidence_org ON sustainability_evi
 CREATE INDEX IF NOT EXISTS idx_sustainability_evidence_entity ON sustainability_evidence(entity_type, entity_id);
 CREATE INDEX IF NOT EXISTS idx_sustainability_evidence_expiry ON sustainability_evidence(organization_id, expiry_date) WHERE is_deleted = FALSE;
 
+-- -----------------------------------------------------------------------------
+-- 10. sustainability_approvals
+--     Depends on: organizations, users (migration 0001)
+-- -----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS sustainability_approvals (
   id UUID PRIMARY KEY,
   organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
@@ -205,6 +288,10 @@ CREATE TABLE IF NOT EXISTS sustainability_approvals (
 CREATE INDEX IF NOT EXISTS idx_sustainability_approvals_org ON sustainability_approvals(organization_id) WHERE is_deleted = FALSE;
 CREATE INDEX IF NOT EXISTS idx_sustainability_approvals_entity ON sustainability_approvals(entity_type, entity_id);
 
+-- -----------------------------------------------------------------------------
+-- 11. sustainability_reports
+--     Depends on: organizations, users (migration 0001), sustainability_programs
+-- -----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS sustainability_reports (
   id UUID PRIMARY KEY,
   organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,

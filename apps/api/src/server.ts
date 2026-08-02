@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import Fastify, { type FastifyInstance } from 'fastify';
+import { serializerCompiler, validatorCompiler, type ZodTypeProvider } from 'fastify-type-provider-zod';
 import helmet from '@fastify/helmet';
 import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
@@ -95,8 +96,41 @@ declare module 'fastify' {
   }
 }
 
+// ---- Startup diagnostics (no secrets logged) ----
+function parseDatabaseUrl(url: string): {
+  host: string;
+  port: number;
+  database: string;
+  user: string;
+} {
+  try {
+    const u = new URL(url);
+    return {
+      host: u.hostname,
+      port: Number(u.port || 5432),
+      database: u.pathname.replace(/^\//, '') || '(default)',
+      user: u.username || '(default)',
+    };
+  } catch {
+    return { host: '(invalid)', port: 0, database: '(invalid)', user: '(invalid)' };
+  }
+}
+
+function printStartupDiagnostics(): void {
+  const db = parseDatabaseUrl(env.DATABASE_URL);
+  console.log('[startup] environment file loaded: .env');
+  console.log(`[startup] DATABASE_URL host: ${db.host} (password hidden)`);
+  console.log(`[startup] database name: ${db.database}`);
+  console.log(`[startup] database port: ${db.port}`);
+  console.log(`[startup] database user: ${db.user}`);
+  console.log(`[startup] API_PORT: ${env.PORT}`);
+  console.log(`[startup] API_HOST: ${env.HOST}`);
+}
+
 export async function buildServer(): Promise<FastifyInstance> {
-  const app = Fastify({ logger: false });
+  const app = Fastify({ logger: false }).withTypeProvider<ZodTypeProvider>();
+  app.setValidatorCompiler(validatorCompiler);
+  app.setSerializerCompiler(serializerCompiler);
 
   await app.register(helmet, { contentSecurityPolicy: false });
   await app.register(cors, { origin: true, credentials: true });
@@ -109,6 +143,7 @@ export async function buildServer(): Promise<FastifyInstance> {
 
   // Health (public)
   app.get('/health', async () => ({ status: 'ok' }));
+  app.get('/api/v1/health', async () => ({ status: 'ok', env: env.NODE_ENV }));
 
   // Auth (public) under /api/v1/auth
   await app.register(authRoutes, { prefix: '/api/v1/auth' });
@@ -246,6 +281,7 @@ export async function buildServer(): Promise<FastifyInstance> {
 }
 
 async function start(): Promise<void> {
+  printStartupDiagnostics();
   const app = await buildServer();
   try {
     await migrate();
@@ -255,13 +291,25 @@ async function start(): Promise<void> {
     aiJobWorker.start();
     await app.listen({ port: env.PORT, host: env.HOST });
     console.log(`[api] listening on ${env.HOST}:${env.PORT}`);
-  } catch (err) {
-    console.error('[api] startup failed', err);
+  } catch (err: any) {
+    const db = parseDatabaseUrl(env.DATABASE_URL);
+    let reason = err?.code || err?.message || String(err);
+    if (/ECONNREFUSED/.test(String(reason))) {
+      reason =
+        `PostgreSQL is not reachable at ${db.host}:${db.port} (ECONNREFUSED). ` +
+        'Start PostgreSQL on the configured DATABASE_URL host/port (e.g. via docker-compose ' +
+        'or a local PostgreSQL service), then restart the API.';
+    }
+    console.error(`[api] startup failed: ${reason}`);
+    console.error(
+      `[api] DATABASE_URL host: ${db.host} | database: ${db.database} | database port: ${db.port} | API_PORT: ${env.PORT}`,
+    );
     await pool.end();
     process.exit(1);
   }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
-  start();
-}
+start().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
