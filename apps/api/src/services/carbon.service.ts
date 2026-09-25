@@ -454,4 +454,10 @@ export const carbonService = {
     if (!history) throw new NotFoundError('Calculation history not found');
     return history;
   },
+  async deleteCalculationHistory(orgId: string, id: string) {
+    const deleted = await calculationHistoryRepo.softDelete(id, orgId);
+    if (!deleted) throw new NotFoundError('Calculation history not found');
+    await audit({ action: 'carbon.calculation_history.delete', entity: 'calculation_history', entityId: id, organizationId: orgId });
+    return { success: true };
+  },
 };

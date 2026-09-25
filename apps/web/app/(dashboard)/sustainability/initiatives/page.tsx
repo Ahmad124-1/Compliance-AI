@@ -34,7 +34,7 @@ export default function SustainabilityInitiativesPage() {
           <p className="text-sm text-[rgb(var(--muted))]">Track sustainability initiatives and their milestones.</p>
         </div>
         <Button asChild>
-          <Link href="/dashboard/sustainability/initiatives/new">
+          <Link href="/sustainability/initiatives/new">
             <PlusCircle className="mr-2 h-4 w-4" />New Initiative
           </Link>
         </Button>
@@ -80,7 +80,7 @@ export default function SustainabilityInitiativesPage() {
               {initiativesQuery.data?.map((init: any) => (
                 <tr key={init.id} className="border-b border-[rgb(var(--border-color))]">
                   <td className="px-4 py-3">
-                    <Link href={`/dashboard/sustainability/initiatives/${init.id}`} className="font-medium hover:underline">
+                    <Link href={`/sustainability/initiatives/${init.id}`} className="font-medium hover:underline">
                       {init.name}
                     </Link>
                   </td>
@@ -94,7 +94,7 @@ export default function SustainabilityInitiativesPage() {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <Button variant="ghost" size="sm" asChild>
-                        <Link href={`/dashboard/sustainability/initiatives/${init.id}`}><Edit2 className="h-3 w-3" /></Link>
+                        <Link href={`/sustainability/initiatives/${init.id}`}><Edit2 className="h-3 w-3" /></Link>
                       </Button>
                       <Button variant="ghost" size="sm" onClick={() => deleteMutation.mutate(init.id)}><Trash2 className="h-3 w-3" /></Button>
                     </div>

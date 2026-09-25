@@ -35,7 +35,7 @@ export default function SustainabilityReportsPage() {
           <p className="text-sm text-[rgb(var(--muted))]">Generate and manage sustainability reports.</p>
         </div>
         <Button asChild>
-          <Link href="/dashboard/sustainability/reports/new">
+          <Link href="/sustainability/reports/new">
             <PlusCircle className="mr-2 h-4 w-4" />Generate Report
           </Link>
         </Button>
@@ -97,7 +97,7 @@ export default function SustainabilityReportsPage() {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <Button variant="ghost" size="sm" asChild>
-                        <Link href={`/dashboard/sustainability/reports/${r.id}`}><Edit2 className="h-3 w-3" /></Link>
+                        <Link href={`/sustainability/reports/${r.id}`}><Edit2 className="h-3 w-3" /></Link>
                       </Button>
                       <Button variant="ghost" size="sm" onClick={() => deleteMutation.mutate(r.id)}><Trash2 className="h-3 w-3" /></Button>
                     </div>

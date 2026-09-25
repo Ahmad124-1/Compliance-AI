@@ -5,18 +5,18 @@ import type { ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 
 const PATH_LABELS: Record<string, string> = {
-  '/dashboard/carbon': 'Carbon & GHG',
-  '/dashboard/carbon/dashboard': 'Dashboard',
-  '/dashboard/carbon/facilities': 'Facilities',
-  '/dashboard/carbon/emission-sources': 'Emission Sources',
-  '/dashboard/carbon/scopes': 'GHG Scopes',
-  '/dashboard/carbon/emissions': 'Emissions',
-  '/dashboard/carbon/emission-factors': 'Emission Factors',
-  '/dashboard/carbon/projects': 'Reduction Projects',
-  '/dashboard/carbon/offsets': 'Carbon Offsets',
-  '/dashboard/carbon/targets': 'Reduction Targets',
-  '/dashboard/carbon/reports': 'Carbon Reports',
-  '/dashboard/carbon/calculator': 'Calculator',
+  '/carbon': 'Carbon & GHG',
+  '/carbon/dashboard': 'Dashboard',
+  '/carbon/facilities': 'Facilities',
+  '/carbon/emission-sources': 'Emission Sources',
+  '/carbon/scopes': 'GHG Scopes',
+  '/carbon/emissions': 'Emissions',
+  '/carbon/emission-factors': 'Emission Factors',
+  '/carbon/projects': 'Reduction Projects',
+  '/carbon/offsets': 'Carbon Offsets',
+  '/carbon/targets': 'Reduction Targets',
+  '/carbon/reports': 'Carbon Reports',
+  '/carbon/calculator': 'Calculator',
 };
 
 export default function CarbonLayoutRoute({ children }: { children: ReactNode }) {

@@ -92,7 +92,7 @@ export default function ProgramNewPage() {
       toast({ title: 'Program created', description: 'Your program has been created successfully.', variant: 'success' });
       queryClient.invalidateQueries({ queryKey: ['sustainability', 'programs'] });
       queryClient.invalidateQueries({ queryKey: ['sustainability', 'dashboard'] });
-      router.push(`/dashboard/sustainability/programs/${result.id}`);
+      router.push(`/sustainability/programs/${result.id}`);
     },
     onError: (err: Error) => {
       toast({ title: 'Failed to create program', description: err.message, variant: 'error' });
@@ -130,7 +130,7 @@ export default function ProgramNewPage() {
     <div className="mx-auto max-w-4xl space-y-6">
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="sm" asChild>
-          <Link href="/dashboard/sustainability/programs">
+          <Link href="/sustainability/programs">
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
@@ -239,7 +239,7 @@ export default function ProgramNewPage() {
           </div>
           <div className="flex items-center gap-3">
             <Button variant="ghost" asChild>
-              <Link href="/dashboard/sustainability/programs">Cancel</Link>
+              <Link href="/sustainability/programs">Cancel</Link>
             </Button>
             <Button type="submit" disabled={createMutation.isPending}>
               {createMutation.isPending ? (

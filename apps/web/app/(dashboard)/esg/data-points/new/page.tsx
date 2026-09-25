@@ -17,6 +17,7 @@ import { Skeleton } from '@/components/ui';
 import { useToast } from '@/providers/ToastProvider';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { esgService } from '@/modules/esg/service.js';
+import { useAutoFill } from '@/modules/auto-populate/hooks/useAutoFill';
 
 const dataPointSchema = z.object({
   metricId: z.string().min(1, 'Metric is required'),
@@ -40,6 +41,7 @@ export default function NewDataPointPage() {
 
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm<DataPointFormData>({ resolver: zodResolver(dataPointSchema) });
@@ -48,6 +50,8 @@ export default function NewDataPointPage() {
     queryKey: ['esg', 'metrics', 'options'],
     queryFn: () => esgService.listMetrics({ limit: '200' }),
   });
+  const { useSetDefaults } = useAutoFill({});
+  useSetDefaults(setValue, [{ name: 'programId', fillKey: 'programId' }, { name: 'goalId', fillKey: 'goalId' }, { name: 'kpiId', fillKey: 'kpiId' }, { name: 'reportingPeriodId', fillKey: 'reportingPeriodId' }, { name: 'facilityId', fillKey: 'facilityId' }, { name: 'projectId', fillKey: 'projectId' }, { name: 'supplierIds', fillKey: 'supplierIds' }]);
 
   const { data: periods, isLoading: periodsLoading } = useQuery({
     queryKey: ['esg', 'periods', 'options'],

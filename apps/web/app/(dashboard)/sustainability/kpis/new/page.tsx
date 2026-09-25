@@ -15,7 +15,9 @@ import { Field } from '@/components/ui/Field';
 import { useToast } from '@/providers/ToastProvider';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { sustainabilityService } from '@/modules/sustainability/service.js';
+import { masterDataLookup } from '@/modules/data-hub/service.js';
 import { KPI_TYPES, KPI_FREQUENCIES } from '@/modules/sustainability/constants.js';
+import { useAutoFill } from '@/modules/auto-populate/hooks/useAutoFill';
 
 const kpiSchema = z.object({
   programId: z.string().optional(),
@@ -46,17 +48,18 @@ export default function KpiNewPage() {
   const queryClient = useQueryClient();
 
   const { data: programs } = useQuery({
-    queryKey: ['sustainability', 'programs', { limit: 100 }],
-    queryFn: () => sustainabilityService.listPrograms({ limit: 100 }),
+    queryKey: ['data-hub', 'sync', 'lookup', 'program'],
+    queryFn: () => masterDataLookup.programs(),
   });
 
   const { data: goals } = useQuery({
-    queryKey: ['sustainability', 'goals', { limit: 100 }],
-    queryFn: () => sustainabilityService.listGoals({ limit: 100 }),
+    queryKey: ['data-hub', 'sync', 'lookup', 'goal'],
+    queryFn: () => masterDataLookup.goals(),
   });
 
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { errors, isSubmitting },
     watch,
@@ -75,6 +78,8 @@ export default function KpiNewPage() {
       aggregation: 'latest',
     },
   });
+  const { useSetDefaults } = useAutoFill({});
+  useSetDefaults(setValue, [{ name: 'programId', fillKey: 'programId' }, { name: 'goalId', fillKey: 'goalId' }, { name: 'kpiId', fillKey: 'kpiId' }, { name: 'reportingPeriodId', fillKey: 'reportingPeriodId' }, { name: 'facilityId', fillKey: 'facilityId' }, { name: 'projectId', fillKey: 'projectId' }, { name: 'supplierIds', fillKey: 'supplierIds' }]);
 
   const createMutation = useMutation({
     mutationFn: (data: KpiFormData) =>
@@ -91,7 +96,7 @@ export default function KpiNewPage() {
       toast({ title: 'KPI created', description: 'Your KPI has been created successfully.', variant: 'success' });
       queryClient.invalidateQueries({ queryKey: ['sustainability', 'kpis'] });
       queryClient.invalidateQueries({ queryKey: ['sustainability', 'dashboard'] });
-      router.push(`/dashboard/sustainability/kpis/${result.id}`);
+      router.push(`/sustainability/kpis/${result.id}`);
     },
     onError: (err: Error) => {
       toast({ title: 'Failed to create KPI', description: err.message, variant: 'error' });
@@ -117,7 +122,7 @@ export default function KpiNewPage() {
     <div className="mx-auto max-w-4xl space-y-6">
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="sm" asChild>
-          <Link href="/dashboard/sustainability/kpis">
+          <Link href="/sustainability/kpis">
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
@@ -217,8 +222,8 @@ export default function KpiNewPage() {
                 className="h-10 w-full rounded-lg border border-[rgb(var(--border-color))] bg-transparent px-3 text-sm"
               >
                 <option value="">No program</option>
-                {programs?.map((p: any) => (
-                  <option key={p.id} value={p.id}>{p.name}</option>
+                {programs?.map((p) => (
+                  <option key={p.value} value={p.value}>{p.label}</option>
                 ))}
               </select>
             </Field>
@@ -229,8 +234,8 @@ export default function KpiNewPage() {
                 className="h-10 w-full rounded-lg border border-[rgb(var(--border-color))] bg-transparent px-3 text-sm"
               >
                 <option value="">No goal</option>
-                {goals?.map((g: any) => (
-                  <option key={g.id} value={g.id}>{g.name}</option>
+                {goals?.map((g) => (
+                  <option key={g.value} value={g.value}>{g.label}</option>
                 ))}
               </select>
             </Field>
@@ -243,7 +248,7 @@ export default function KpiNewPage() {
           </Button>
           <div className="flex items-center gap-3">
             <Button variant="ghost" asChild>
-              <Link href="/dashboard/sustainability/kpis">Cancel</Link>
+              <Link href="/sustainability/kpis">Cancel</Link>
             </Button>
             <Button type="submit" disabled={createMutation.isPending}>
               {createMutation.isPending ? (

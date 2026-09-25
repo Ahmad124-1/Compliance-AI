@@ -108,7 +108,7 @@ export default function InitiativeDetailPage() {
 
   const deleteMutation = useMutation({
     mutationFn: () => sustainabilityService.deleteInitiative(id),
-    onSuccess: () => { toast({ title: 'Initiative deleted', variant: 'success' }); router.push('/dashboard/sustainability/initiatives'); },
+    onSuccess: () => { toast({ title: 'Initiative deleted', variant: 'success' }); router.push('/sustainability/initiatives'); },
     onError: (err: Error) => toast({ title: 'Delete failed', description: err.message, variant: 'error' }),
   });
 
@@ -181,7 +181,7 @@ export default function InitiativeDetailPage() {
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="sm" asChild>
-            <Link href="/dashboard/sustainability/initiatives"><ArrowLeft className="h-4 w-4" /></Link>
+            <Link href="/sustainability/initiatives"><ArrowLeft className="h-4 w-4" /></Link>
           </Button>
           <div>
             <div className="flex items-center gap-2">

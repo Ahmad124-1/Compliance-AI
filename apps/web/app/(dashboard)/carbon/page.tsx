@@ -128,7 +128,7 @@ export default function CarbonOverviewPage() {
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-sm font-semibold">Facilities</h2>
             <Button variant="outline" size="sm" asChild>
-              <Link href="/dashboard/carbon/facilities">
+              <Link href="/carbon/facilities">
                 View All <ArrowRight className="ml-1 h-3 w-3" />
               </Link>
             </Button>
@@ -157,7 +157,7 @@ export default function CarbonOverviewPage() {
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-sm font-semibold">Projects</h2>
             <Button variant="outline" size="sm" asChild>
-              <Link href="/dashboard/carbon/projects">
+              <Link href="/carbon/projects">
                 View All <ArrowRight className="ml-1 h-3 w-3" />
               </Link>
             </Button>
@@ -191,7 +191,7 @@ export default function CarbonOverviewPage() {
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-sm font-semibold">Offsets</h2>
             <Button variant="outline" size="sm" asChild>
-              <Link href="/dashboard/carbon/offsets">
+              <Link href="/carbon/offsets">
                 View All <ArrowRight className="ml-1 h-3 w-3" />
               </Link>
             </Button>
@@ -224,19 +224,19 @@ export default function CarbonOverviewPage() {
         <h2 className="mb-3 text-sm font-semibold">Quick Actions</h2>
         <div className="flex flex-wrap gap-2">
           <Button asChild>
-            <Link href="/dashboard/carbon/facilities"><PlusCircle className="mr-2 h-4 w-4" />New Facility</Link>
+            <Link href="/carbon/facilities"><PlusCircle className="mr-2 h-4 w-4" />New Facility</Link>
           </Button>
           <Button variant="outline" asChild>
-            <Link href="/dashboard/carbon/emission-sources"><PlusCircle className="mr-2 h-4 w-4" />New Emission Source</Link>
+            <Link href="/carbon/emission-sources"><PlusCircle className="mr-2 h-4 w-4" />New Emission Source</Link>
           </Button>
           <Button variant="outline" asChild>
-            <Link href="/dashboard/carbon/projects"><PlusCircle className="mr-2 h-4 w-4" />New Project</Link>
+            <Link href="/carbon/projects"><PlusCircle className="mr-2 h-4 w-4" />New Project</Link>
           </Button>
           <Button variant="outline" asChild>
-            <Link href="/dashboard/carbon/offsets"><PlusCircle className="mr-2 h-4 w-4" />New Offset</Link>
+            <Link href="/carbon/offsets"><PlusCircle className="mr-2 h-4 w-4" />New Offset</Link>
           </Button>
           <Button variant="outline" asChild>
-            <Link href="/dashboard/carbon/calculator"><Zap className="mr-2 h-4 w-4" />Calculator</Link>
+            <Link href="/carbon/calculator"><Zap className="mr-2 h-4 w-4" />Calculator</Link>
           </Button>
         </div>
       </Card>

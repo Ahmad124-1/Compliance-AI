@@ -35,7 +35,7 @@ export default function SustainabilityKpisPage() {
           <p className="text-sm text-[rgb(var(--muted))]">Define and track key performance indicators for sustainability.</p>
         </div>
         <Button asChild>
-          <Link href="/dashboard/sustainability/kpis/new">
+          <Link href="/sustainability/kpis/new">
             <PlusCircle className="mr-2 h-4 w-4" />New KPI
           </Link>
         </Button>
@@ -89,7 +89,7 @@ export default function SustainabilityKpisPage() {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <Button variant="ghost" size="sm" asChild>
-                        <Link href={`/dashboard/sustainability/kpis/${k.id}`}><Edit2 className="h-3 w-3" /></Link>
+                        <Link href={`/sustainability/kpis/${k.id}`}><Edit2 className="h-3 w-3" /></Link>
                       </Button>
                       <Button variant="ghost" size="sm" onClick={() => deleteMutation.mutate(k.id)}><Trash2 className="h-3 w-3" /></Button>
                     </div>

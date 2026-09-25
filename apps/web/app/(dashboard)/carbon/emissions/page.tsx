@@ -272,7 +272,12 @@ export default function EmissionsPage() {
         ) : error ? (
           <p className="text-sm text-red-500">Failed to load emissions.</p>
         ) : filtered.length === 0 ? (
-          <p className="text-sm text-[rgb(var(--muted))]">No emission records found.</p>
+          <div className="py-8 text-center">
+            <p className="text-sm text-[rgb(var(--muted))]">No carbon data available</p>
+            <Button className="mt-3" variant="outline" onClick={() => { resetForm(); setShowForm(true); }}>
+              <PlusCircle className="mr-2 h-4 w-4" />Add Record
+            </Button>
+          </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">

@@ -16,6 +16,7 @@ import { useToast } from '@/providers/ToastProvider';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { esgService } from '@/modules/esg/service.js';
 import { PILLARS } from '@/modules/esg/constants.js';
+import { useAutoFill } from '@/modules/auto-populate/hooks/useAutoFill';
 
 const disclosureSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -50,6 +51,7 @@ export default function EsgDisclosureNewPage() {
 
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm<DisclosureFormData>({
@@ -65,6 +67,8 @@ export default function EsgDisclosureNewPage() {
       summary: '',
     },
   });
+  const { useSetDefaults } = useAutoFill({});
+  useSetDefaults(setValue, [{ name: 'programId', fillKey: 'programId' }, { name: 'goalId', fillKey: 'goalId' }, { name: 'kpiId', fillKey: 'kpiId' }, { name: 'reportingPeriodId', fillKey: 'reportingPeriodId' }, { name: 'facilityId', fillKey: 'facilityId' }, { name: 'projectId', fillKey: 'projectId' }, { name: 'supplierIds', fillKey: 'supplierIds' }]);
 
   const createMutation = useMutation({
     mutationFn: (data: DisclosureFormData) =>

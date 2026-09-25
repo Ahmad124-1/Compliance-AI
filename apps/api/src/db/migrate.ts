@@ -1,5 +1,6 @@
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { pool, query } from './pool.js';
 
@@ -43,7 +44,18 @@ export async function migrate(): Promise<void> {
 }
 
 // Allow running directly: tsx src/db/migrate.ts
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Resolve both paths and compare case-insensitively so the direct-run check
+// also works on Windows (where import.meta.url uses forward slashes while
+// process.argv[1] may use backslashes, and paths may contain spaces).
+const entryPath =
+  process.argv[1] && process.argv[1] !== '.'
+    ? path.resolve(process.argv[1])
+    : undefined;
+const currentPath = fileURLToPath(import.meta.url);
+const isDirectRun =
+  entryPath !== undefined && currentPath.toLowerCase() === entryPath.toLowerCase();
+
+if (isDirectRun) {
   migrate()
     .then(() => pool.end())
     .catch((err) => {

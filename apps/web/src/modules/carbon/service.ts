@@ -17,6 +17,7 @@ export const carbonService = {
   getScope: (id: string) => carbonApi.scopes.get(id),
   createScope: (input: Record<string, unknown>) => carbonApi.scopes.create(input),
   updateScope: (id: string, input: Record<string, unknown>) => carbonApi.scopes.update(id, input),
+  deleteScope: (id: string) => carbonApi.scopes.delete(id),
 
   listEmissions: (params?: Record<string, unknown>) => carbonApi.emissions.list(params),
   getEmission: (id: string) => carbonApi.emissions.get(id),
@@ -28,28 +29,34 @@ export const carbonService = {
   getEmissionFactor: (id: string) => carbonApi.emissionFactors.get(id),
   createEmissionFactor: (input: Record<string, unknown>) => carbonApi.emissionFactors.create(input),
   updateEmissionFactor: (id: string, input: Record<string, unknown>) => carbonApi.emissionFactors.update(id, input),
+  deleteEmissionFactor: (id: string) => carbonApi.emissionFactors.delete(id),
 
   listProjects: (params?: Record<string, unknown>) => carbonApi.projects.list(params),
   getProject: (id: string) => carbonApi.projects.get(id),
   createProject: (input: Record<string, unknown>) => carbonApi.projects.create(input),
   updateProject: (id: string, input: Record<string, unknown>) => carbonApi.projects.update(id, input),
+  deleteProject: (id: string) => carbonApi.projects.delete(id),
 
   listOffsets: (params?: Record<string, unknown>) => carbonApi.offsets.list(params),
   getOffset: (id: string) => carbonApi.offsets.get(id),
   createOffset: (input: Record<string, unknown>) => carbonApi.offsets.create(input),
   updateOffset: (id: string, input: Record<string, unknown>) => carbonApi.offsets.update(id, input),
+  deleteOffset: (id: string) => carbonApi.offsets.delete(id),
 
   listTargets: (params?: Record<string, unknown>) => carbonApi.targets.list(params),
   getTarget: (id: string) => carbonApi.targets.get(id),
   createTarget: (input: Record<string, unknown>) => carbonApi.targets.create(input),
   updateTarget: (id: string, input: Record<string, unknown>) => carbonApi.targets.update(id, input),
+  deleteTarget: (id: string) => carbonApi.targets.delete(id),
 
   listReports: (params?: Record<string, unknown>) => carbonApi.reports.list(params),
   getReport: (id: string) => carbonApi.reports.get(id),
   createReport: (input: Record<string, unknown>) => carbonApi.reports.create(input),
   updateReport: (id: string, input: Record<string, unknown>) => carbonApi.reports.update(id, input),
+  deleteReport: (id: string) => carbonApi.reports.delete(id),
 
   getDashboard: () => carbonApi.dashboard.get(),
   calculateEmissions: (input: Record<string, unknown>) => carbonApi.calculate.calculate(input),
   listCalculations: (params?: Record<string, unknown>) => carbonApi.calculations.list(params),
+  deleteCalculation: (id: string) => carbonApi.calculations.delete(id),
 };

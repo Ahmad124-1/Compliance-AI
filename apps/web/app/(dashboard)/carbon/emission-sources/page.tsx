@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { carbonService } from '@/modules/carbon/service.js';
+import { masterDataLookup } from '@/modules/data-hub/service.js';
 import { EMISSION_SOURCE_CATEGORIES, EMISSION_SOURCE_TYPES } from '@/modules/carbon/constants.js';
 
 export default function EmissionSourcesPage() {
@@ -33,8 +34,8 @@ export default function EmissionSourcesPage() {
   });
 
   const facilitiesQuery = useQuery({
-    queryKey: ['carbon', 'facilities'],
-    queryFn: () => carbonService.listFacilities({ limit: 50 }),
+    queryKey: ['data-hub', 'sync', 'lookup', 'facility'],
+    queryFn: () => masterDataLookup.facilities(),
   });
 
   const sources = data ?? [];
@@ -141,8 +142,8 @@ export default function EmissionSourcesPage() {
                 onChange={(e) => setFormData({ ...formData, facilityId: e.target.value })}
               >
                 <option value="">None</option>
-                {facilitiesQuery.data?.map((f: any) => (
-                  <option key={f.id} value={f.id}>{f.name}</option>
+                {facilitiesQuery.data?.map((f) => (
+                  <option key={f.value} value={f.value}>{f.label}</option>
                 ))}
               </select>
             </div>
@@ -166,8 +167,8 @@ export default function EmissionSourcesPage() {
           </div>
           <select className="rounded border border-input bg-background px-3 py-2 text-sm" value={facilityFilter} onChange={(e) => setFacilityFilter(e.target.value)}>
             <option value="">All Facilities</option>
-            {facilitiesQuery.data?.map((f: any) => (
-              <option key={f.id} value={f.id}>{f.name}</option>
+            {facilitiesQuery.data?.map((f) => (
+              <option key={f.value} value={f.value}>{f.label}</option>
             ))}
           </select>
           <select className="rounded border border-input bg-background px-3 py-2 text-sm" value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
@@ -193,7 +194,12 @@ export default function EmissionSourcesPage() {
         ) : error ? (
           <p className="text-sm text-red-500">Failed to load emission sources.</p>
         ) : filtered.length === 0 ? (
-          <p className="text-sm text-[rgb(var(--muted))]">No emission sources found.</p>
+          <div className="py-8 text-center">
+            <p className="text-sm text-[rgb(var(--muted))]">No carbon data available</p>
+            <Button className="mt-3" variant="outline" onClick={() => { resetForm(); setShowForm(true); }}>
+              <PlusCircle className="mr-2 h-4 w-4" />Add Source
+            </Button>
+          </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">

@@ -51,23 +51,23 @@ const COMMANDS: CommandItem[] = [
   { href: '/search', label: 'Global Search', icon: Search, category: 'Dashboard', keywords: ['find'] },
 
   // Sustainability
-  { href: '/dashboard/sustainability', label: 'Sustainability Overview', icon: Leaf, category: 'Sustainability', keywords: ['esg', 'green'] },
-  { href: '/dashboard/sustainability/programs', label: 'Sustainability Programs', icon: Recycle, category: 'Sustainability', keywords: ['programs'] },
-  { href: '/dashboard/sustainability/goals', label: 'ESG Goals', icon: Target, category: 'Sustainability', keywords: ['goals'] },
-  { href: '/dashboard/sustainability/kpis', label: 'KPIs', icon: LineChart, category: 'Sustainability', keywords: ['kpis', 'metrics'] },
-  { href: '/dashboard/sustainability/initiatives', label: 'Initiatives', icon: Rocket, category: 'Sustainability', keywords: ['initiatives'] },
-  { href: '/dashboard/sustainability/reports', label: 'Sustainability Reports', icon: FileText, category: 'Sustainability', keywords: ['reports'] },
+  { href: '/sustainability', label: 'Sustainability Overview', icon: Leaf, category: 'Sustainability', keywords: ['esg', 'green'] },
+  { href: '/sustainability/programs', label: 'Sustainability Programs', icon: Recycle, category: 'Sustainability', keywords: ['programs'] },
+  { href: '/sustainability/goals', label: 'ESG Goals', icon: Target, category: 'Sustainability', keywords: ['goals'] },
+  { href: '/sustainability/kpis', label: 'KPIs', icon: LineChart, category: 'Sustainability', keywords: ['kpis', 'metrics'] },
+  { href: '/sustainability/initiatives', label: 'Initiatives', icon: Rocket, category: 'Sustainability', keywords: ['initiatives'] },
+  { href: '/sustainability/reports', label: 'Sustainability Reports', icon: FileText, category: 'Sustainability', keywords: ['reports'] },
 
   // Carbon & GHG
-  { href: '/dashboard/carbon', label: 'Carbon & GHG', icon: Recycle, category: 'Carbon & GHG', keywords: ['carbon', 'emissions', 'ghg'] },
-  { href: '/dashboard/carbon/emissions', label: 'Activity Data', icon: FileText, category: 'Carbon & GHG', keywords: ['activity', 'data'] },
-  { href: '/dashboard/carbon/emission-factors', label: 'Emission Factors', icon: BarChart3, category: 'Carbon & GHG', keywords: ['factors'] },
-  { href: '/dashboard/carbon/scopes', label: 'GHG Scopes', icon: Globe, category: 'Carbon & GHG', keywords: ['scope', 'scopes'] },
-  { href: '/dashboard/carbon/targets', label: 'SBTi Targets', icon: Target, category: 'Carbon & GHG', keywords: ['sbti', 'targets'] },
-  { href: '/dashboard/carbon/projects', label: 'Carbon Projects', icon: Rocket, category: 'Carbon & GHG', keywords: ['projects', 'reduction'] },
-  { href: '/dashboard/carbon/offsets', label: 'Carbon Offsets', icon: TreePine, category: 'Carbon & GHG', keywords: ['offsets', 'credits'] },
-  { href: '/dashboard/carbon/reports', label: 'Carbon Reports', icon: FileBarChart, category: 'Carbon & GHG', keywords: ['carbon reports'] },
-  { href: '/dashboard/carbon/calculator', label: 'Carbon Calculator', icon: BarChart3, category: 'Carbon & GHG', keywords: ['calculator'] },
+  { href: '/carbon', label: 'Carbon & GHG', icon: Recycle, category: 'Carbon & GHG', keywords: ['carbon', 'emissions', 'ghg'] },
+  { href: '/carbon/emissions', label: 'Activity Data', icon: FileText, category: 'Carbon & GHG', keywords: ['activity', 'data'] },
+  { href: '/carbon/emission-factors', label: 'Emission Factors', icon: BarChart3, category: 'Carbon & GHG', keywords: ['factors'] },
+  { href: '/carbon/scopes', label: 'GHG Scopes', icon: Globe, category: 'Carbon & GHG', keywords: ['scope', 'scopes'] },
+  { href: '/carbon/targets', label: 'SBTi Targets', icon: Target, category: 'Carbon & GHG', keywords: ['sbti', 'targets'] },
+  { href: '/carbon/projects', label: 'Carbon Projects', icon: Rocket, category: 'Carbon & GHG', keywords: ['projects', 'reduction'] },
+  { href: '/carbon/offsets', label: 'Carbon Offsets', icon: TreePine, category: 'Carbon & GHG', keywords: ['offsets', 'credits'] },
+  { href: '/carbon/reports', label: 'Carbon Reports', icon: FileBarChart, category: 'Carbon & GHG', keywords: ['carbon reports'] },
+  { href: '/carbon/calculator', label: 'Carbon Calculator', icon: BarChart3, category: 'Carbon & GHG', keywords: ['calculator'] },
 
   // Environmental
   { href: '/dashboard/environment', label: 'Environmental (ISO 14001)', icon: Globe, category: 'Environmental', keywords: ['environment', 'ems', 'iso 14001'] },

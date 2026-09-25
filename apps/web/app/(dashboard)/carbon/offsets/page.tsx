@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { PlusCircle, Edit, Search, Filter } from 'lucide-react';
+import { PlusCircle, Edit, Trash2, Search, Filter } from 'lucide-react';
 
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -103,6 +103,11 @@ export default function OffsetsPage() {
       projectId: o.projectId ?? '',
     });
     setShowForm(true);
+  };
+
+  const handleDelete = async (id: string) => {
+    await carbonService.deleteOffset(id);
+    queryClient.invalidateQueries({ queryKey: ['carbon', 'offsets'] });
   };
 
   return (
@@ -208,7 +213,12 @@ export default function OffsetsPage() {
         ) : error ? (
           <p className="text-sm text-red-500">Failed to load offsets.</p>
         ) : filtered.length === 0 ? (
-          <p className="text-sm text-[rgb(var(--muted))]">No offsets found.</p>
+          <div className="py-8 text-center">
+            <p className="text-sm text-[rgb(var(--muted))]">No carbon data available</p>
+            <Button className="mt-3" variant="outline" onClick={() => { resetForm(); setShowForm(true); }}>
+              <PlusCircle className="mr-2 h-4 w-4" />Add Offset
+            </Button>
+          </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -239,6 +249,7 @@ export default function OffsetsPage() {
                     <td className="py-2">
                       <div className="flex gap-2">
                         <Button variant="ghost" size="sm" onClick={() => handleEdit(o)}><Edit className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="sm" onClick={() => handleDelete(o.id)}><Trash2 className="h-4 w-4" /></Button>
                       </div>
                     </td>
                   </tr>

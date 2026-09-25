@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card } from '@/components/ui/card.js';
 import { Button } from '@/components/ui/button.js';
@@ -9,8 +9,11 @@ import { Textarea } from '@/components/ui/textarea.js';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { environmentService } from '@/modules/environment/service.js';
 import { OBJECTIVE_TYPES, OBJECTIVE_STATUSES, OBJECTIVE_PRIORITIES } from '@/modules/environment/constants.js';
+import { useAutoFill } from '@/modules/auto-populate/hooks/useAutoFill';
 
 export default function NewObjectivePage() {
+
+  const { autoFillState } = useAutoFill({});
   const router = useRouter();
   const qc = useQueryClient();
   const [form, setForm] = useState({
@@ -47,6 +50,8 @@ export default function NewObjectivePage() {
       baseline: Number(form.baseline),
     });
   };
+
+  useEffect(() => { autoFillState(setForm, [{stateKey:'facilityId',fillKey:'facilityId'},{stateKey:'projectId',fillKey:'projectId'},{stateKey:'supplierIds',fillKey:'supplierIds'},{stateKey:'reportingPeriodId',fillKey:'reportingPeriodId'},{stateKey:'programId',fillKey:'programId'},{stateKey:'goalId',fillKey:'goalId'},{stateKey:'kpiId',fillKey:'kpiId'}]); }, [autoFillState]);
 
   return (
     <div className="mx-auto max-w-2xl space-y-5">

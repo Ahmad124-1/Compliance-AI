@@ -89,6 +89,9 @@ import { environmentalObjectivesRoutes } from './routes/environmental-objectives
 import { environmentalReportsRoutes } from './routes/environmental-reports.routes.js';
 import { environmentalAiRoutes } from './routes/environmental-ai.routes.js';
 import { complianceRoutes } from './routes/compliance.routes.js';
+import { dataHubRoutes } from './routes/data-hub.routes.js';
+import { syncRoutes } from './routes/sync.routes.js';
+import { autoPopulateRoutes } from './routes/auto-populate.routes.js';
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -273,6 +276,15 @@ export async function buildServer(): Promise<FastifyInstance> {
   await app.register(supplierCarbonRoutes, { prefix: '/api/v1' });
   await app.register(responsibleSourcingRoutes, { prefix: '/api/v1' });
   await app.register(certificationRoutes, { prefix: '/api/v1' });
+
+  // Phase 3: Data Hub (Sustainability Workspace)
+  await app.register(dataHubRoutes, { prefix: '/api/v1' });
+
+  // Phase 4: Master Data Synchronization
+  await app.register(syncRoutes, { prefix: '/api/v1' });
+
+  // Phase 4 Sprint 4.2: Auto Population & Business Logic
+  await app.register(autoPopulateRoutes, { prefix: '/api/v1' });
 
   // Public QR lookup (no auth)
   await app.register(publicQrRoutes, { prefix: '/api/v1' });

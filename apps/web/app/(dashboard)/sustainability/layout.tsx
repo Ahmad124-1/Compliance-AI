@@ -5,13 +5,13 @@ import type { ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 
 const PATH_LABELS: Record<string, string> = {
-  '/dashboard/sustainability': 'Sustainability',
-  '/dashboard/sustainability/programs': 'Programs',
-  '/dashboard/sustainability/goals': 'Goals',
-  '/dashboard/sustainability/kpis': 'KPIs',
-  '/dashboard/sustainability/initiatives': 'Initiatives',
-  '/dashboard/sustainability/reports': 'Reports',
-  '/dashboard/sustainability/settings': 'Settings',
+  '/sustainability': 'Sustainability',
+  '/sustainability/programs': 'Programs',
+  '/sustainability/goals': 'Goals',
+  '/sustainability/kpis': 'KPIs',
+  '/sustainability/initiatives': 'Initiatives',
+  '/sustainability/reports': 'Reports',
+  '/sustainability/settings': 'Settings',
 };
 
 export default function SustainabilityLayoutRoute({ children }: { children: ReactNode }) {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Calculator as CalcIcon, History } from 'lucide-react';
+import { Calculator as CalcIcon, History, Trash2 } from 'lucide-react';
 
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -37,6 +37,11 @@ export default function CalculatorPage() {
     };
     const res = await carbonService.calculateEmissions(payload);
     setResult(res as { result: Record<string, unknown>; calculationId: string; emissionFactor: Record<string, unknown> });
+    queryClient.invalidateQueries({ queryKey: ['carbon', 'calculations'] });
+  };
+
+  const handleDeleteCalculation = async (id: string) => {
+    await carbonService.deleteCalculation(id);
     queryClient.invalidateQueries({ queryKey: ['carbon', 'calculations'] });
   };
 
@@ -157,6 +162,7 @@ export default function CalculatorPage() {
                   <th className="pb-2 font-medium">Result (CO2e)</th>
                   <th className="pb-2 font-medium">Method</th>
                   <th className="pb-2 font-medium">Date</th>
+                  <th className="pb-2 font-medium">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -166,6 +172,15 @@ export default function CalculatorPage() {
                     <td className="py-2 font-medium">{c.resultCo2e} tCO2e</td>
                     <td className="py-2 text-[rgb(var(--muted))]">{c.methodology ?? '-'}</td>
                     <td className="py-2 text-[rgb(var(--muted))]">{c.createdAt ? new Date(c.createdAt).toLocaleDateString() : '-'}</td>
+                    <td className="py-2">
+                      <button
+                        onClick={() => handleDeleteCalculation(c.id)}
+                        className="text-red-500 hover:text-red-700 transition-colors"
+                        aria-label={`Delete calculation ${c.id}`}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>

@@ -1,13 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { PlusCircle, Edit, Search, Filter } from 'lucide-react';
+import { PlusCircle, Edit, Trash2, Search, Filter } from 'lucide-react';
 
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { carbonService } from '@/modules/carbon/service.js';
+import { masterDataLookup } from '@/modules/data-hub/service.js';
 import { TARGET_TYPES, TARGET_STATUSES } from '@/modules/carbon/constants.js';
 
 export default function TargetsPage() {
@@ -41,8 +42,8 @@ export default function TargetsPage() {
   });
 
   const facilitiesQuery = useQuery({
-    queryKey: ['carbon', 'facilities'],
-    queryFn: () => carbonService.listFacilities({ limit: 50 }),
+    queryKey: ['data-hub', 'sync', 'lookup', 'facility'],
+    queryFn: () => masterDataLookup.facilities(),
   });
 
   const targets = data ?? [];
@@ -165,7 +166,16 @@ export default function TargetsPage() {
             </div>
             <div>
               <label className="text-xs text-[rgb(var(--muted))]">Facility</label>
-              <Input value={formData.facilityId} onChange={(e) => setFormData({ ...formData, facilityId: e.target.value })} />
+              <select
+                className="w-full rounded border border-input bg-background px-3 py-2 text-sm"
+                value={formData.facilityId}
+                onChange={(e) => setFormData({ ...formData, facilityId: e.target.value })}
+              >
+                <option value="">No facility</option>
+                {facilitiesQuery.data?.map((f) => (
+                  <option key={f.value} value={f.value}>{f.label}</option>
+                ))}
+              </select>
             </div>
             <div>
               <label className="text-xs text-[rgb(var(--muted))]">Scope</label>
@@ -187,7 +197,12 @@ export default function TargetsPage() {
         {filtered.map((t: any) => {
           const progress = Math.min(100, Math.max(0, ((t.baselineEmissionsTco2e - t.currentEmissionsTco2e) / Math.max(1, t.baselineEmissionsTco2e)) * 100));
           const targetProgress = t.baselineEmissionsTco2e > 0 ? ((t.baselineEmissionsTco2e - t.targetEmissionsTco2e) / t.baselineEmissionsTco2e) * 100 : 0;
-          return (
+          const handleDelete = async (id: string) => {
+    await carbonService.deleteTarget(id);
+    queryClient.invalidateQueries({ queryKey: ['carbon', 'targets'] });
+  };
+
+  return (
             <Card key={t.id} className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-sm font-semibold">{t.name}</h3>
@@ -223,6 +238,7 @@ export default function TargetsPage() {
               </div>
               <div className="mt-3 flex gap-2">
                 <Button variant="ghost" size="sm" onClick={() => handleEdit(t)}><Edit className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="sm" onClick={() => handleDelete(t.id)}><Trash2 className="h-4 w-4" /></Button>
               </div>
             </Card>
           );
@@ -238,7 +254,12 @@ export default function TargetsPage() {
       ) : error ? (
         <p className="text-sm text-red-500">Failed to load targets.</p>
       ) : filtered.length === 0 ? (
-        <p className="text-sm text-[rgb(var(--muted))]">No targets found.</p>
+        <div className="py-8 text-center">
+            <p className="text-sm text-[rgb(var(--muted))]">No carbon data available</p>
+            <Button className="mt-3" variant="outline" onClick={() => { resetForm(); setShowForm(true); }}>
+              <PlusCircle className="mr-2 h-4 w-4" />Add Target
+            </Button>
+          </div>
       ) : null}
     </div>
   );

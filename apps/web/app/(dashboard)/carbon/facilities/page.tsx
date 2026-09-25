@@ -83,10 +83,8 @@ export default function FacilitiesPage() {
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">Facilities</h2>
-        <Button asChild>
-          <Button onClick={() => { resetForm(); setShowForm(true); }}>
-            <PlusCircle className="mr-2 h-4 w-4" />New Facility
-          </Button>
+        <Button onClick={() => { resetForm(); setShowForm(true); }}>
+          <PlusCircle className="mr-2 h-4 w-4" />New Facility
         </Button>
       </div>
 
@@ -157,7 +155,12 @@ export default function FacilitiesPage() {
         ) : error ? (
           <p className="text-sm text-red-500">Failed to load facilities.</p>
         ) : filtered.length === 0 ? (
-          <p className="text-sm text-[rgb(var(--muted))]">No facilities found.</p>
+          <div className="py-8 text-center">
+            <p className="text-sm text-[rgb(var(--muted))]">No carbon data available</p>
+            <Button className="mt-3" variant="outline" onClick={() => { resetForm(); setShowForm(true); }}>
+              <PlusCircle className="mr-2 h-4 w-4" />Add Facility
+            </Button>
+          </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">

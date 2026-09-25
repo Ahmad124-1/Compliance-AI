@@ -16,7 +16,9 @@ import { Field } from '@/components/ui/Field';
 import { useToast } from '@/providers/ToastProvider';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { sustainabilityService } from '@/modules/sustainability/service.js';
+import { masterDataLookup } from '@/modules/data-hub/service.js';
 import { REPORT_TYPES_SUSTAINABILITY } from '@/modules/sustainability/constants.js';
+import { useAutoFill } from '@/modules/auto-populate/hooks/useAutoFill.js';
 
 const reportSchema = z.object({
   programId: z.string().optional(),
@@ -43,8 +45,8 @@ export default function ReportNewPage() {
   const [selectedFormat, setSelectedFormat] = useState<string>('pdf');
 
   const { data: programs } = useQuery({
-    queryKey: ['sustainability', 'programs', { limit: 100 }],
-    queryFn: () => sustainabilityService.listPrograms({ limit: 100 }),
+    queryKey: ['data-hub', 'sync', 'lookup', 'program'],
+    queryFn: () => masterDataLookup.programs(),
   });
 
   const {
@@ -66,6 +68,9 @@ export default function ReportNewPage() {
     },
   });
 
+  const { useSetDefaults: useSetReportDefaults } = useAutoFill<ReportFormData>();
+  useSetReportDefaults(setValue, [{ name: 'programId', fillKey: 'programId' }]);
+
   const createMutation = useMutation({
     mutationFn: (data: ReportFormData) =>
       sustainabilityService.createReport({
@@ -84,7 +89,7 @@ export default function ReportNewPage() {
     onSuccess: (result: any) => {
       toast({ title: 'Report generated', description: 'Your report has been generated successfully.', variant: 'success' });
       queryClient.invalidateQueries({ queryKey: ['sustainability', 'reports'] });
-      router.push(`/dashboard/sustainability/reports/${result.id}`);
+      router.push(`/sustainability/reports/${result.id}`);
     },
     onError: (err: Error) => {
       toast({ title: 'Failed to generate report', description: err.message, variant: 'error' });
@@ -110,7 +115,7 @@ export default function ReportNewPage() {
     <div className="mx-auto max-w-4xl space-y-6">
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="sm" asChild>
-          <Link href="/dashboard/sustainability/reports">
+          <Link href="/sustainability/reports">
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
@@ -151,8 +156,8 @@ export default function ReportNewPage() {
                 className="h-10 w-full rounded-lg border border-[rgb(var(--border-color))] bg-transparent px-3 text-sm"
               >
                 <option value="">All Programs</option>
-                {programs?.map((p: any) => (
-                  <option key={p.id} value={p.id}>{p.name}</option>
+                {programs?.map((p) => (
+                  <option key={p.value} value={p.value}>{p.label}</option>
                 ))}
               </select>
             </Field>
@@ -221,7 +226,7 @@ export default function ReportNewPage() {
           </Button>
           <div className="flex items-center gap-3">
             <Button variant="ghost" asChild>
-              <Link href="/dashboard/sustainability/reports">Cancel</Link>
+              <Link href="/sustainability/reports">Cancel</Link>
             </Button>
             <Button type="submit" disabled={createMutation.isPending}>
               {createMutation.isPending ? (

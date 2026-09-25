@@ -110,7 +110,7 @@ export default function KpiDetailPage() {
 
   const deleteMutation = useMutation({
     mutationFn: () => sustainabilityService.deleteKpi(id),
-    onSuccess: () => { toast({ title: 'KPI deleted', variant: 'success' }); router.push('/dashboard/sustainability/kpis'); },
+    onSuccess: () => { toast({ title: 'KPI deleted', variant: 'success' }); router.push('/sustainability/kpis'); },
     onError: (err: Error) => toast({ title: 'Delete failed', description: err.message, variant: 'error' }),
   });
 
@@ -164,7 +164,7 @@ export default function KpiDetailPage() {
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="sm" asChild>
-            <Link href="/dashboard/sustainability/kpis"><ArrowLeft className="h-4 w-4" /></Link>
+            <Link href="/sustainability/kpis"><ArrowLeft className="h-4 w-4" /></Link>
           </Button>
           <div>
             <div className="flex items-center gap-2">

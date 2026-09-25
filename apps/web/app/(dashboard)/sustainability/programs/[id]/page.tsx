@@ -156,7 +156,7 @@ export default function ProgramDetailPage() {
     onSuccess: () => {
       toast({ title: 'Program deleted', variant: 'success' });
       queryClient.invalidateQueries({ queryKey: ['sustainability', 'programs'] });
-      router.push('/dashboard/sustainability/programs');
+      router.push('/sustainability/programs');
     },
     onError: (err: Error) => {
       toast({ title: 'Delete failed', description: err.message, variant: 'error' });
@@ -281,7 +281,7 @@ export default function ProgramDetailPage() {
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="sm" asChild>
-            <Link href="/dashboard/sustainability/programs">
+            <Link href="/sustainability/programs">
               <ArrowLeft className="h-4 w-4" />
             </Link>
           </Button>
@@ -424,17 +424,17 @@ export default function ProgramDetailPage() {
                     {program.status === 'active' ? 'Pause' : 'Activate'}
                   </Button>
                   <Button size="sm" variant="outline" asChild>
-                    <Link href={`/dashboard/sustainability/goals/new?programId=${id}`}>
+                    <Link href={`/sustainability/goals/new?programId=${id}`}>
                       <Plus className="mr-1 h-3 w-3" />Add Goal
                     </Link>
                   </Button>
                   <Button size="sm" variant="outline" asChild>
-                    <Link href={`/dashboard/sustainability/initiatives/new?programId=${id}`}>
+                    <Link href={`/sustainability/initiatives/new?programId=${id}`}>
                       <Plus className="mr-1 h-3 w-3" />Add Initiative
                     </Link>
                   </Button>
                   <Button size="sm" variant="outline" asChild>
-                    <Link href={`/dashboard/sustainability/kpis/new?programId=${id}`}>
+                    <Link href={`/sustainability/kpis/new?programId=${id}`}>
                       <Plus className="mr-1 h-3 w-3" />Add KPI
                     </Link>
                   </Button>
@@ -448,7 +448,7 @@ export default function ProgramDetailPage() {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-base font-semibold">Linked Goals ({goals?.length ?? 0})</h2>
               <Button variant="outline" size="sm" asChild>
-                <Link href={`/dashboard/sustainability/goals/new?programId=${id}`}>
+                <Link href={`/sustainability/goals/new?programId=${id}`}>
                   <Plus className="mr-1 h-3 w-3" />Add Goal
                 </Link>
               </Button>
@@ -458,7 +458,7 @@ export default function ProgramDetailPage() {
             ) : (
               <div className="space-y-2">
                 {goals.map((goal: any) => (
-                  <Link key={goal.id} href={`/dashboard/sustainability/goals/${goal.id}`}
+                  <Link key={goal.id} href={`/sustainability/goals/${goal.id}`}
                     className="flex items-center justify-between rounded-lg border border-[rgb(var(--border-color))] p-3 hover:bg-[rgb(var(--panel-2))] transition-colors"
                   >
                     <div className="flex items-center gap-3">
@@ -489,7 +489,7 @@ export default function ProgramDetailPage() {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-base font-semibold">Linked Initiatives ({initiatives?.length ?? 0})</h2>
               <Button variant="outline" size="sm" asChild>
-                <Link href={`/dashboard/sustainability/initiatives/new?programId=${id}`}>
+                <Link href={`/sustainability/initiatives/new?programId=${id}`}>
                   <Plus className="mr-1 h-3 w-3" />Add Initiative
                 </Link>
               </Button>
@@ -499,7 +499,7 @@ export default function ProgramDetailPage() {
             ) : (
               <div className="space-y-2">
                 {initiatives.map((init: any) => (
-                  <Link key={init.id} href={`/dashboard/sustainability/initiatives/${init.id}`}
+                  <Link key={init.id} href={`/sustainability/initiatives/${init.id}`}
                     className="flex items-center justify-between rounded-lg border border-[rgb(var(--border-color))] p-3 hover:bg-[rgb(var(--panel-2))] transition-colors"
                   >
                     <div className="flex items-center gap-3">

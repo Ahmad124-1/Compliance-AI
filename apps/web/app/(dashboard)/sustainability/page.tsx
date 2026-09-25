@@ -145,7 +145,7 @@ export default function SustainabilityOverviewPage() {
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-sm font-semibold">Programs</h2>
             <Button variant="outline" size="sm" asChild>
-              <Link href="/dashboard/sustainability/programs">View All <ArrowRight className="ml-1 h-3 w-3" /></Link>
+              <Link href="/sustainability/programs">View All <ArrowRight className="ml-1 h-3 w-3" /></Link>
             </Button>
           </div>
           {programsQuery.isLoading ? (
@@ -156,7 +156,7 @@ export default function SustainabilityOverviewPage() {
             <ul className="space-y-2">
               {programsQuery.data.map((p: any) => (
                 <li key={p.id} className="flex items-center justify-between text-sm">
-                  <Link href={`/dashboard/sustainability/programs/${p.id}`} className="font-medium hover:underline">{p.name}</Link>
+                  <Link href={`/sustainability/programs/${p.id}`} className="font-medium hover:underline">{p.name}</Link>
                   <span className={`text-xs px-2 py-0.5 rounded ${
                     p.status === 'active' ? 'bg-green-100 text-green-800' :
                     p.status === 'draft' ? 'bg-gray-100 text-gray-800' :
@@ -174,7 +174,7 @@ export default function SustainabilityOverviewPage() {
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-sm font-semibold">ESG Goals</h2>
             <Button variant="outline" size="sm" asChild>
-              <Link href="/dashboard/sustainability/goals">View All <ArrowRight className="ml-1 h-3 w-3" /></Link>
+              <Link href="/sustainability/goals">View All <ArrowRight className="ml-1 h-3 w-3" /></Link>
             </Button>
           </div>
           {goalsQuery.isLoading ? (
@@ -185,7 +185,7 @@ export default function SustainabilityOverviewPage() {
             <ul className="space-y-2">
               {goalsQuery.data.map((g: any) => (
                 <li key={g.id} className="text-sm">
-                  <Link href={`/dashboard/sustainability/goals/${g.id}`} className="flex items-center justify-between font-medium hover:underline">
+                  <Link href={`/sustainability/goals/${g.id}`} className="flex items-center justify-between font-medium hover:underline">
                     <span>{g.name}</span>
                     <span className={`text-xs px-2 py-0.5 rounded ${
                       g.status === 'achieved' ? 'bg-green-100 text-green-800' :
@@ -209,7 +209,7 @@ export default function SustainabilityOverviewPage() {
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-sm font-semibold">Initiatives</h2>
             <Button variant="outline" size="sm" asChild>
-              <Link href="/dashboard/sustainability/initiatives">View All <ArrowRight className="ml-1 h-3 w-3" /></Link>
+              <Link href="/sustainability/initiatives">View All <ArrowRight className="ml-1 h-3 w-3" /></Link>
             </Button>
           </div>
           {initiativesQuery.isLoading ? (
@@ -220,7 +220,7 @@ export default function SustainabilityOverviewPage() {
             <ul className="space-y-2">
               {initiativesQuery.data.map((init: any) => (
                 <li key={init.id} className="text-sm">
-                  <Link href={`/dashboard/sustainability/initiatives/${init.id}`} className="flex items-center justify-between font-medium hover:underline">
+                  <Link href={`/sustainability/initiatives/${init.id}`} className="flex items-center justify-between font-medium hover:underline">
                     <span>{init.name}</span>
                     <span className={`text-xs px-2 py-0.5 rounded ${
                       init.status === 'completed' ? 'bg-green-100 text-green-800' :
@@ -273,19 +273,19 @@ export default function SustainabilityOverviewPage() {
         <h2 className="mb-3 text-sm font-semibold">Quick Actions</h2>
         <div className="flex flex-wrap gap-2">
           <Button asChild>
-            <Link href="/dashboard/sustainability/programs/new"><PlusCircle className="mr-2 h-4 w-4" />New Program</Link>
+            <Link href="/sustainability/programs/new"><PlusCircle className="mr-2 h-4 w-4" />New Program</Link>
           </Button>
           <Button variant="outline" asChild>
-            <Link href="/dashboard/sustainability/goals/new"><PlusCircle className="mr-2 h-4 w-4" />New Goal</Link>
+            <Link href="/sustainability/goals/new"><PlusCircle className="mr-2 h-4 w-4" />New Goal</Link>
           </Button>
           <Button variant="outline" asChild>
-            <Link href="/dashboard/sustainability/initiatives/new"><PlusCircle className="mr-2 h-4 w-4" />New Initiative</Link>
+            <Link href="/sustainability/initiatives/new"><PlusCircle className="mr-2 h-4 w-4" />New Initiative</Link>
           </Button>
           <Button variant="outline" asChild>
-            <Link href="/dashboard/sustainability/kpis/new"><PlusCircle className="mr-2 h-4 w-4" />New KPI</Link>
+            <Link href="/sustainability/kpis/new"><PlusCircle className="mr-2 h-4 w-4" />New KPI</Link>
           </Button>
           <Button variant="outline" asChild>
-            <Link href="/dashboard/sustainability/reports/new"><ReportIcon className="mr-2 h-4 w-4" />Generate Report</Link>
+            <Link href="/sustainability/reports/new"><ReportIcon className="mr-2 h-4 w-4" />Generate Report</Link>
           </Button>
         </div>
       </Card>

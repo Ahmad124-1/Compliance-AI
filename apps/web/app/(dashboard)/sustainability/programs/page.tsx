@@ -40,7 +40,7 @@ export default function SustainabilityProgramsPage() {
           <p className="text-sm text-[rgb(var(--muted))]">Manage sustainability programs and their lifecycle.</p>
         </div>
         <Button asChild>
-          <Link href="/dashboard/sustainability/programs/new">
+          <Link href="/sustainability/programs/new">
             <PlusCircle className="mr-2 h-4 w-4" />New Program
           </Link>
         </Button>
@@ -92,7 +92,7 @@ export default function SustainabilityProgramsPage() {
               {programsQuery.data?.map((p: any) => (
                 <tr key={p.id} className="border-b border-[rgb(var(--border-color))]">
                   <td className="px-4 py-3">
-                    <Link href={`/dashboard/sustainability/programs/${p.id}`} className="font-medium hover:underline">
+                    <Link href={`/sustainability/programs/${p.id}`} className="font-medium hover:underline">
                       {p.name}
                     </Link>
                   </td>
@@ -107,7 +107,7 @@ export default function SustainabilityProgramsPage() {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <Button variant="ghost" size="sm" asChild>
-                        <Link href={`/dashboard/sustainability/programs/${p.id}`}><Edit2 className="h-3 w-3" /></Link>
+                        <Link href={`/sustainability/programs/${p.id}`}><Edit2 className="h-3 w-3" /></Link>
                       </Button>
                       <Button variant="ghost" size="sm" onClick={() => statusMutation.mutate({ id: p.id, status: p.status === 'active' ? 'paused' : 'active' })}>
                         {p.status === 'active' ? <Pause className="h-3 w-3" /> : <Play className="h-3 w-3" />}

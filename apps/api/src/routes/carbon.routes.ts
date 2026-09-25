@@ -327,6 +327,12 @@ export async function carbonRoutes(app: FastifyInstance): Promise<void> {
     return carbonService.updateScope(auth.org, id, req.body as Partial<z.infer<typeof scopeCreateSchema>>);
   });
 
+  app.delete('/carbon/scopes/:id', { preHandler: carbonPermission('delete') }, async (req) => {
+    const auth = getAuth(req);
+    const { id } = req.params as { id: string };
+    return carbonService.deleteScope(auth.org, id);
+  });
+
   // ---- Emission Records ----
   app.get('/carbon/emissions', { preHandler: carbonPermission('read') }, async (req) => {
     const auth = getAuth(req);
@@ -395,6 +401,12 @@ export async function carbonRoutes(app: FastifyInstance): Promise<void> {
     return carbonService.updateEmissionFactor(auth.org, id, req.body as Partial<z.infer<typeof emissionFactorCreateSchema>>);
   });
 
+  app.delete('/carbon/emission-factors/:id', { preHandler: carbonPermission('delete') }, async (req) => {
+    const auth = getAuth(req);
+    const { id } = req.params as { id: string };
+    return carbonService.deleteEmissionFactor(auth.org, id);
+  });
+
   // ---- Carbon Projects ----
   app.get('/carbon/projects', { preHandler: carbonPermission('read') }, async (req) => {
     const auth = getAuth(req);
@@ -425,6 +437,12 @@ export async function carbonRoutes(app: FastifyInstance): Promise<void> {
     return carbonService.updateCarbonProject(auth.org, id, req.body as Partial<z.infer<typeof carbonProjectCreateSchema>>);
   });
 
+  app.delete('/carbon/projects/:id', { preHandler: carbonPermission('delete') }, async (req) => {
+    const auth = getAuth(req);
+    const { id } = req.params as { id: string };
+    return carbonService.deleteCarbonProject(auth.org, id);
+  });
+
   // ---- Carbon Offsets ----
   app.get('/carbon/offsets', { preHandler: carbonPermission('read') }, async (req) => {
     const auth = getAuth(req);
@@ -452,6 +470,12 @@ export async function carbonRoutes(app: FastifyInstance): Promise<void> {
     const auth = getAuth(req);
     const { id } = req.params as { id: string };
     return carbonService.updateCarbonOffset(auth.org, id, req.body as Partial<z.infer<typeof carbonOffsetCreateSchema>>);
+  });
+
+  app.delete('/carbon/offsets/:id', { preHandler: carbonPermission('delete') }, async (req) => {
+    const auth = getAuth(req);
+    const { id } = req.params as { id: string };
+    return carbonService.deleteCarbonOffset(auth.org, id);
   });
 
   // ---- Reduction Targets ----
@@ -484,6 +508,12 @@ export async function carbonRoutes(app: FastifyInstance): Promise<void> {
     return carbonService.updateReductionTarget(auth.org, id, req.body as Partial<z.infer<typeof reductionTargetCreateSchema>>);
   });
 
+  app.delete('/carbon/targets/:id', { preHandler: carbonPermission('delete') }, async (req) => {
+    const auth = getAuth(req);
+    const { id } = req.params as { id: string };
+    return carbonService.deleteReductionTarget(auth.org, id);
+  });
+
   // ---- Carbon Reports ----
   app.get('/carbon/reports', { preHandler: carbonPermission('read') }, async (req) => {
     const auth = getAuth(req);
@@ -513,6 +543,12 @@ export async function carbonRoutes(app: FastifyInstance): Promise<void> {
     return carbonService.updateCarbonReport(auth.org, id, req.body as Partial<z.infer<typeof carbonReportCreateSchema>>);
   });
 
+  app.delete('/carbon/reports/:id', { preHandler: carbonPermission('delete') }, async (req) => {
+    const auth = getAuth(req);
+    const { id } = req.params as { id: string };
+    return carbonService.deleteCarbonReport(auth.org, id);
+  });
+
   // ---- Dashboard ----
   app.get('/carbon/dashboard', { preHandler: carbonPermission('read') }, async (req) => {
     const auth = getAuth(req);
@@ -535,5 +571,11 @@ export async function carbonRoutes(app: FastifyInstance): Promise<void> {
       page: q.page ? Number(q.page) : undefined,
       limit: q.limit ? Number(q.limit) : undefined,
     });
+  });
+
+  app.delete('/carbon/calculations/:id', { preHandler: carbonPermission('delete') }, async (req) => {
+    const auth = getAuth(req);
+    const { id } = req.params as { id: string };
+    return carbonService.deleteCalculationHistory(auth.org, id);
   });
 }

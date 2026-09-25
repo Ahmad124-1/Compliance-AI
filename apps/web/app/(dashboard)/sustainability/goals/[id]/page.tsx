@@ -139,7 +139,7 @@ export default function GoalDetailPage() {
     mutationFn: () => sustainabilityService.deleteGoal(id),
     onSuccess: () => {
       toast({ title: 'Goal deleted', variant: 'success' });
-      router.push('/dashboard/sustainability/goals');
+      router.push('/sustainability/goals');
     },
     onError: (err: Error) => toast({ title: 'Delete failed', description: err.message, variant: 'error' }),
   });
@@ -186,7 +186,7 @@ export default function GoalDetailPage() {
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="sm" asChild>
-            <Link href="/dashboard/sustainability/goals"><ArrowLeft className="h-4 w-4" /></Link>
+            <Link href="/sustainability/goals"><ArrowLeft className="h-4 w-4" /></Link>
           </Button>
           <div>
             <div className="flex items-center gap-2">
@@ -326,7 +326,7 @@ export default function GoalDetailPage() {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-base font-semibold">Linked KPIs ({kpis?.length ?? 0})</h2>
               <Button variant="outline" size="sm" asChild>
-                <Link href={`/dashboard/sustainability/kpis/new?goalId=${id}`}><Plus className="mr-1 h-3 w-3" />Add KPI</Link>
+                <Link href={`/sustainability/kpis/new?goalId=${id}`}><Plus className="mr-1 h-3 w-3" />Add KPI</Link>
               </Button>
             </div>
             {!kpis?.length ? (
@@ -334,7 +334,7 @@ export default function GoalDetailPage() {
             ) : (
               <div className="space-y-2">
                 {kpis.map((kpi: any) => (
-                  <Link key={kpi.id} href={`/dashboard/sustainability/kpis/${kpi.id}`}
+                  <Link key={kpi.id} href={`/sustainability/kpis/${kpi.id}`}
                     className="flex items-center justify-between rounded-lg border border-[rgb(var(--border-color))] p-3 hover:bg-[rgb(var(--panel-2))] transition-colors"
                   >
                     <div className="flex items-center gap-3">

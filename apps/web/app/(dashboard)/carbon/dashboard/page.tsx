@@ -77,7 +77,21 @@ export default function CarbonDashboardPage() {
         </div>
       ) : null}
 
-      {dashboard && (
+      {dashboard && dashboard.totalEmissions === 0 && (
+        <Card className="p-8 text-center">
+          <p className="text-sm text-[rgb(var(--muted))]">No carbon data available</p>
+          <div className="mt-3 flex justify-center gap-2">
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/carbon/facilities">Add Facility</Link>
+            </Button>
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/carbon/emissions">Add Emission Record</Link>
+            </Button>
+          </div>
+        </Card>
+      )}
+
+      {dashboard && dashboard.totalEmissions > 0 && (
         <div className="grid gap-4 md:grid-cols-3">
           <Card className="p-4">
             <h2 className="mb-3 text-sm font-semibold">Net Zero Progress</h2>
@@ -162,7 +176,7 @@ export default function CarbonDashboardPage() {
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-sm font-semibold">Facility Comparison</h2>
             <Button variant="outline" size="sm" asChild>
-              <Link href="/dashboard/carbon/facilities"><ArrowRight className="ml-1 h-3 w-3" />View All</Link>
+              <Link href="/carbon/facilities"><ArrowRight className="ml-1 h-3 w-3" />View All</Link>
             </Button>
           </div>
           {dashboardQuery.isLoading ? (
@@ -192,11 +206,19 @@ export default function CarbonDashboardPage() {
           <div className="space-y-3 text-sm">
             <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-950">
               <p className="font-medium text-blue-900 dark:text-blue-100">Emission Trend</p>
-              <p className="text-xs text-blue-700 dark:text-blue-300">Total emissions have decreased by {Math.round(dashboard?.reductionProgress || 0)}% this period.</p>
+              <p className="text-xs text-blue-700 dark:text-blue-300">
+                {dashboard && dashboard.totalEmissions > 0
+                  ? `Total emissions have decreased by ${Math.round(dashboard.reductionProgress)}% this period.`
+                  : 'Add emission records to see trend insights.'}
+              </p>
             </div>
             <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950">
               <p className="font-medium text-amber-900 dark:text-amber-100">Scope 3 Alert</p>
-              <p className="text-xs text-amber-700 dark:text-amber-300">Scope 3 emissions account for {dashboard ? ((dashboard.scope3Emissions / Math.max(1, dashboard.totalEmissions)) * 100).toFixed(1) : 0}% of total.</p>
+              <p className="text-xs text-amber-700 dark:text-amber-300">
+                {dashboard && dashboard.totalEmissions > 0
+                  ? `Scope 3 emissions account for ${((dashboard.scope3Emissions / dashboard.totalEmissions) * 100).toFixed(1)}% of total.`
+                  : 'No emission data available yet.'}
+              </p>
             </div>
             <div className="p-3 rounded-lg bg-green-50 dark:bg-green-950">
               <p className="font-medium text-green-900 dark:text-green-100">Recommendation</p>

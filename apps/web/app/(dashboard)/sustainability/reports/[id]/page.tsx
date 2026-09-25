@@ -43,7 +43,7 @@ export default function ReportDetailPage() {
     onSuccess: () => {
       toast({ title: 'Report deleted', variant: 'success' });
       queryClient.invalidateQueries({ queryKey: ['sustainability', 'reports'] });
-      router.push('/dashboard/sustainability/reports');
+      router.push('/sustainability/reports');
     },
     onError: (err: Error) => toast({ title: 'Delete failed', description: err.message, variant: 'error' }),
   });
@@ -92,7 +92,7 @@ export default function ReportDetailPage() {
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="sm" asChild>
-            <Link href="/dashboard/sustainability/reports"><ArrowLeft className="h-4 w-4" /></Link>
+            <Link href="/sustainability/reports"><ArrowLeft className="h-4 w-4" /></Link>
           </Button>
           <div>
             <div className="flex items-center gap-2">

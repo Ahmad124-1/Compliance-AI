@@ -16,7 +16,9 @@ import { Field } from '@/components/ui/Field';
 import { useToast } from '@/providers/ToastProvider';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { sustainabilityService } from '@/modules/sustainability/service.js';
+import { masterDataLookup } from '@/modules/data-hub/service.js';
 import { INITIATIVE_STATUSES } from '@/modules/sustainability/constants.js';
+import { useAutoFill } from '@/modules/auto-populate/hooks/useAutoFill';
 
 const initiativeSchema = z.object({
   programId: z.string().optional(),
@@ -63,12 +65,13 @@ export default function InitiativeNewPage() {
   const [milestones, setMilestones] = useState<MilestoneEntry[]>([]);
 
   const { data: programs } = useQuery({
-    queryKey: ['sustainability', 'programs', { limit: 100 }],
-    queryFn: () => sustainabilityService.listPrograms({ limit: 100 }),
+    queryKey: ['data-hub', 'sync', 'lookup', 'program'],
+    queryFn: () => masterDataLookup.programs(),
   });
 
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { errors, isSubmitting },
     watch,
@@ -82,6 +85,8 @@ export default function InitiativeNewPage() {
       linkedSdgs: [],
     },
   });
+  const { useSetDefaults } = useAutoFill({});
+  useSetDefaults(setValue, [{ name: 'programId', fillKey: 'programId' }, { name: 'goalId', fillKey: 'goalId' }, { name: 'kpiId', fillKey: 'kpiId' }, { name: 'reportingPeriodId', fillKey: 'reportingPeriodId' }, { name: 'facilityId', fillKey: 'facilityId' }, { name: 'projectId', fillKey: 'projectId' }, { name: 'supplierIds', fillKey: 'supplierIds' }]);
 
   const createMutation = useMutation({
     mutationFn: async (data: InitiativeFormData) => {
@@ -107,7 +112,7 @@ export default function InitiativeNewPage() {
       toast({ title: 'Initiative created', description: 'Your initiative has been created successfully with milestones.', variant: 'success' });
       queryClient.invalidateQueries({ queryKey: ['sustainability', 'initiatives'] });
       queryClient.invalidateQueries({ queryKey: ['sustainability', 'dashboard'] });
-      router.push(`/dashboard/sustainability/initiatives/${result.id}`);
+      router.push(`/sustainability/initiatives/${result.id}`);
     },
     onError: (err: Error) => {
       toast({ title: 'Failed to create initiative', description: err.message, variant: 'error' });
@@ -156,7 +161,7 @@ export default function InitiativeNewPage() {
     <div className="mx-auto max-w-4xl space-y-6">
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="sm" asChild>
-          <Link href="/dashboard/sustainability/initiatives">
+          <Link href="/sustainability/initiatives">
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
@@ -185,8 +190,8 @@ export default function InitiativeNewPage() {
                 className="h-10 w-full rounded-lg border border-[rgb(var(--border-color))] bg-transparent px-3 text-sm"
               >
                 <option value="">No program</option>
-                {programs?.map((p: any) => (
-                  <option key={p.id} value={p.id}>{p.name}</option>
+                {programs?.map((p) => (
+                  <option key={p.value} value={p.value}>{p.label}</option>
                 ))}
               </select>
             </Field>
@@ -309,7 +314,7 @@ export default function InitiativeNewPage() {
           </Button>
           <div className="flex items-center gap-3">
             <Button variant="ghost" asChild>
-              <Link href="/dashboard/sustainability/initiatives">Cancel</Link>
+              <Link href="/sustainability/initiatives">Cancel</Link>
             </Button>
             <Button type="submit" disabled={createMutation.isPending}>
               {createMutation.isPending ? (

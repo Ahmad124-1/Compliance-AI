@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { PlusCircle, Edit, Search, Filter } from 'lucide-react';
+import { PlusCircle, Edit, Trash2, Search, Filter } from 'lucide-react';
 
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -89,6 +89,11 @@ export default function ReportsPage() {
       facilityId: r.facilityId ?? '',
     });
     setShowForm(true);
+  };
+
+  const handleDelete = async (id: string) => {
+    await carbonService.deleteReport(id);
+    queryClient.invalidateQueries({ queryKey: ['carbon', 'reports'] });
   };
 
   return (
@@ -198,7 +203,12 @@ export default function ReportsPage() {
         ) : error ? (
           <p className="text-sm text-red-500">Failed to load reports.</p>
         ) : filtered.length === 0 ? (
-          <p className="text-sm text-[rgb(var(--muted))]">No reports found.</p>
+          <div className="py-8 text-center">
+            <p className="text-sm text-[rgb(var(--muted))]">No carbon data available</p>
+            <Button className="mt-3" variant="outline" onClick={() => { resetForm(); setShowForm(true); }}>
+              <PlusCircle className="mr-2 h-4 w-4" />Add Report
+            </Button>
+          </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -227,6 +237,7 @@ export default function ReportsPage() {
                     <td className="py-2">
                       <div className="flex gap-2">
                         <Button variant="ghost" size="sm" onClick={() => handleEdit(r)}><Edit className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="sm" onClick={() => handleDelete(r.id)}><Trash2 className="h-4 w-4" /></Button>
                       </div>
                     </td>
                   </tr>

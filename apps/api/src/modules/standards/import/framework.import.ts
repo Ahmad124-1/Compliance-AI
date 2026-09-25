@@ -51,6 +51,8 @@ export interface FrameworkImportPayload {
  */
 export async function frameworkImport(payload: FrameworkImportPayload): Promise<{ id: string }> {
   const std = (await standardRepo.findByCode(payload.standard.code)) ?? (await standardRepo.create({ ...payload.standard, isBuiltin: true, isActive: true, category: payload.standard.category as any }));
+  const existing = (await frameworkRepo.listByStandard(std.id)).find((f) => f.version === payload.framework.version);
+  if (existing) return { id: existing.id };
   const fw = await frameworkRepo.create({
     standardId: std.id,
     version: payload.framework.version,

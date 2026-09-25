@@ -58,6 +58,8 @@ export const carbonApi = {
       http<GhgScope>(CARBON_ENDPOINTS.scopes, { method: 'POST', body: JSON.stringify(input) }),
     update: (id: string, input: Record<string, unknown>) =>
       http<GhgScope>(`${CARBON_ENDPOINTS.scopes}/${id}`, { method: 'PATCH', body: JSON.stringify(input) }),
+    delete: (id: string) =>
+      http<{ success: boolean }>(`${CARBON_ENDPOINTS.scopes}/${id}`, { method: 'DELETE' }),
   },
   emissions: {
     list: (params?: Record<string, unknown>) =>
@@ -78,6 +80,8 @@ export const carbonApi = {
       http<EmissionFactor>(CARBON_ENDPOINTS.emissionFactors, { method: 'POST', body: JSON.stringify(input) }),
     update: (id: string, input: Record<string, unknown>) =>
       http<EmissionFactor>(`${CARBON_ENDPOINTS.emissionFactors}/${id}`, { method: 'PATCH', body: JSON.stringify(input) }),
+    delete: (id: string) =>
+      http<{ success: boolean }>(`${CARBON_ENDPOINTS.emissionFactors}/${id}`, { method: 'DELETE' }),
   },
   projects: {
     list: (params?: Record<string, unknown>) =>
@@ -87,6 +91,8 @@ export const carbonApi = {
       http<CarbonProject>(CARBON_ENDPOINTS.projects, { method: 'POST', body: JSON.stringify(input) }),
     update: (id: string, input: Record<string, unknown>) =>
       http<CarbonProject>(`${CARBON_ENDPOINTS.projects}/${id}`, { method: 'PATCH', body: JSON.stringify(input) }),
+    delete: (id: string) =>
+      http<{ success: boolean }>(`${CARBON_ENDPOINTS.projects}/${id}`, { method: 'DELETE' }),
   },
   offsets: {
     list: (params?: Record<string, unknown>) =>
@@ -96,6 +102,8 @@ export const carbonApi = {
       http<CarbonOffset>(CARBON_ENDPOINTS.offsets, { method: 'POST', body: JSON.stringify(input) }),
     update: (id: string, input: Record<string, unknown>) =>
       http<CarbonOffset>(`${CARBON_ENDPOINTS.offsets}/${id}`, { method: 'PATCH', body: JSON.stringify(input) }),
+    delete: (id: string) =>
+      http<{ success: boolean }>(`${CARBON_ENDPOINTS.offsets}/${id}`, { method: 'DELETE' }),
   },
   targets: {
     list: (params?: Record<string, unknown>) =>
@@ -105,6 +113,8 @@ export const carbonApi = {
       http<ReductionTarget>(CARBON_ENDPOINTS.targets, { method: 'POST', body: JSON.stringify(input) }),
     update: (id: string, input: Record<string, unknown>) =>
       http<ReductionTarget>(`${CARBON_ENDPOINTS.targets}/${id}`, { method: 'PATCH', body: JSON.stringify(input) }),
+    delete: (id: string) =>
+      http<{ success: boolean }>(`${CARBON_ENDPOINTS.targets}/${id}`, { method: 'DELETE' }),
   },
   reports: {
     list: (params?: Record<string, unknown>) =>
@@ -114,6 +124,8 @@ export const carbonApi = {
       http<CarbonReport>(CARBON_ENDPOINTS.reports, { method: 'POST', body: JSON.stringify(input) }),
     update: (id: string, input: Record<string, unknown>) =>
       http<CarbonReport>(`${CARBON_ENDPOINTS.reports}/${id}`, { method: 'PATCH', body: JSON.stringify(input) }),
+    delete: (id: string) =>
+      http<{ success: boolean }>(`${CARBON_ENDPOINTS.reports}/${id}`, { method: 'DELETE' }),
   },
   dashboard: {
     get: () => http<CarbonDashboard>(CARBON_ENDPOINTS.dashboard),
@@ -125,5 +137,7 @@ export const carbonApi = {
   calculations: {
     list: (params?: Record<string, unknown>) =>
       http<CalculationHistory[]>(addParams(CARBON_ENDPOINTS.calculations, params)),
+    delete: (id: string) =>
+      http<{ success: boolean }>(`${CARBON_ENDPOINTS.calculations}/${id}`, { method: 'DELETE' }),
   },
 };

@@ -27,10 +27,23 @@ function addParams(url: string, params?: Record<string, unknown>): string {
   return query ? `${url}?${query}` : url;
 }
 
+/**
+ * Backend list endpoints return a paginated envelope
+ * (e.g. { programs, total, page, limit }). This helper extracts the
+ * named array so the typed flat-array contract consumed by pages and
+ * the rest of the module is preserved.
+ */
+function unwrapList<T>(key: string, response: unknown): T[] {
+  const value = (response as Record<string, unknown> | null)?.[key];
+  return Array.isArray(value) ? (value as T[]) : [];
+}
+
 export const sustainabilityApi = {
   programs: {
     list: (params?: Record<string, unknown>) =>
-      http<SustainabilityProgram[]>(addParams(SUSTAINABILITY_ENDPOINTS.programs, params)),
+      http<Record<string, unknown>>(addParams(SUSTAINABILITY_ENDPOINTS.programs, params)).then((res) =>
+        unwrapList<SustainabilityProgram>('programs', res),
+      ),
     get: (id: string) => http<SustainabilityProgram>(`${SUSTAINABILITY_ENDPOINTS.programs}/${id}`),
     create: (input: Record<string, unknown>) =>
       http<SustainabilityProgram>(SUSTAINABILITY_ENDPOINTS.programs, { method: 'POST', body: JSON.stringify(input) }),
@@ -41,7 +54,9 @@ export const sustainabilityApi = {
   },
   goals: {
     list: (params?: Record<string, unknown>) =>
-      http<EsgGoal[]>(addParams(SUSTAINABILITY_ENDPOINTS.goals, params)),
+      http<Record<string, unknown>>(addParams(SUSTAINABILITY_ENDPOINTS.goals, params)).then((res) =>
+        unwrapList<EsgGoal>('goals', res),
+      ),
     get: (id: string) => http<EsgGoal>(`${SUSTAINABILITY_ENDPOINTS.goals}/${id}`),
     create: (input: Record<string, unknown>) =>
       http<EsgGoal>(SUSTAINABILITY_ENDPOINTS.goals, { method: 'POST', body: JSON.stringify(input) }),
@@ -53,7 +68,9 @@ export const sustainabilityApi = {
   },
   kpis: {
     list: (params?: Record<string, unknown>) =>
-      http<SustainabilityKpi[]>(addParams(SUSTAINABILITY_ENDPOINTS.kpis, params)),
+      http<Record<string, unknown>>(addParams(SUSTAINABILITY_ENDPOINTS.kpis, params)).then((res) =>
+        unwrapList<SustainabilityKpi>('kpis', res),
+      ),
     get: (id: string) => http<SustainabilityKpi>(`${SUSTAINABILITY_ENDPOINTS.kpis}/${id}`),
     create: (input: Record<string, unknown>) =>
       http<SustainabilityKpi>(SUSTAINABILITY_ENDPOINTS.kpis, { method: 'POST', body: JSON.stringify(input) }),
@@ -64,15 +81,17 @@ export const sustainabilityApi = {
     recordMeasurement: (kpiId: string, input: Record<string, unknown>) =>
       http<KpiMeasurement>(`${SUSTAINABILITY_ENDPOINTS.kpis}/${kpiId}/measurements`, { method: 'POST', body: JSON.stringify(input) }),
     getMeasurements: (kpiId: string, params?: Record<string, unknown>) =>
-      http<KpiMeasurement[]>(addParams(`${SUSTAINABILITY_ENDPOINTS.measurements}/${kpiId}`, params)),
+      http<KpiMeasurement[]>(addParams(`${SUSTAINABILITY_ENDPOINTS.kpis}/${kpiId}/measurements`, params)),
     getTrend: (kpiId: string, params?: Record<string, unknown>) =>
-      http<KpiMeasurement[]>(addParams(`${SUSTAINABILITY_ENDPOINTS.kpis}/${kpiId}/trend`, params)),
+      http<KpiMeasurement[]>(addParams(`${SUSTAINABILITY_ENDPOINTS.analytics}/kpi-trends`, { kpiId, ...params })),
     getAggregated: (kpiId: string, params?: Record<string, unknown>) =>
       http<{ period: string; value: number }[]>(addParams(`${SUSTAINABILITY_ENDPOINTS.kpis}/${kpiId}/aggregated`, params)),
   },
   initiatives: {
     list: (params?: Record<string, unknown>) =>
-      http<SustainabilityInitiative[]>(addParams(SUSTAINABILITY_ENDPOINTS.initiatives, params)),
+      http<Record<string, unknown>>(addParams(SUSTAINABILITY_ENDPOINTS.initiatives, params)).then((res) =>
+        unwrapList<SustainabilityInitiative>('initiatives', res),
+      ),
     get: (id: string) => http<SustainabilityInitiative>(`${SUSTAINABILITY_ENDPOINTS.initiatives}/${id}`),
     create: (input: Record<string, unknown>) =>
       http<SustainabilityInitiative>(SUSTAINABILITY_ENDPOINTS.initiatives, { method: 'POST', body: JSON.stringify(input) }),
@@ -129,7 +148,9 @@ export const sustainabilityApi = {
   },
   reports: {
     list: (params?: Record<string, unknown>) =>
-      http<SustainabilityReport[]>(addParams(SUSTAINABILITY_ENDPOINTS.reports, params)),
+      http<Record<string, unknown>>(addParams(SUSTAINABILITY_ENDPOINTS.reports, params)).then((res) =>
+        unwrapList<SustainabilityReport>('reports', res),
+      ),
     get: (id: string) => http<SustainabilityReport>(`${SUSTAINABILITY_ENDPOINTS.reports}/${id}`),
     create: (input: Record<string, unknown>) =>
       http<SustainabilityReport>(SUSTAINABILITY_ENDPOINTS.reports, { method: 'POST', body: JSON.stringify(input) }),

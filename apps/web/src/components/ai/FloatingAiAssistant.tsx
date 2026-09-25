@@ -23,11 +23,11 @@ interface Turn {
 }
 
 const CONTEXT_HINTS: Record<string, { label: string; suggestions: string[] }> = {
-  '/dashboard/sustainability': {
+  '/sustainability': {
     label: 'Sustainability',
     suggestions: ['Summarise my sustainability programs', 'What ESG goals are at risk?', 'How do I set a new KPI?'],
   },
-  '/dashboard/carbon': {
+  '/carbon': {
     label: 'Carbon & GHG',
     suggestions: ['Explain Scope 1, 2 and 3 emissions', 'How do I calculate GHG emissions?', 'What is an emission factor?'],
   },
